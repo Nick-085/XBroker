@@ -1,26 +1,35 @@
 #!/usr/bin/env python3
 
-import io
 import json
 import os
 import subprocess
-from getpass import getpass
 
 # Load env vars
 with open('config.json') as confFile:
     config = json.load(confFile)
 
+# Used to extract JSON output
+def capture_command_output(command):
+    stream = os.popen(command)
+    output = stream.read().strip()
+    return output
+
+rUser = input('Who is requesting this session?: ')
 # Connect to Xen Orchestra
 xo = config['xo']
-svcBrokerUser = config['svcBrokerUser']
-svcBrokerPass = config['svcBrokerUser']['svcBrokerPass']
+svcBrokerUser = config['svcCreds']['svcBrokerUser']
+svcBrokerPass = config['svcCreds']['svcBrokerPass']
 vmToClone = config['vmToClone']
+slowClone = config['slowClone']
 
 # Register service user to XO(A)
-subprocess.run('xo-cli register --au ' + '--url ' + xo + " " + xo + " " + svcBrokerUser + " " + svcBrokerPass)
+subprocess.run('xo-cli register --au ' + '--url ' + xo + " " + xo + " " + svcBrokerUser + " " + svcBrokerPass, shell=True)
+print(" ")
+subprocess.run
 
 # Clone VM and change its name to include the username of the requestor
-vdsInstance = subprocess.run('xo-cli --json vm.clone uuid=' + vmToClone) # todo return the VM UUID so we can rename it with the username
-vdsSearch = subprocess.run('xo-cli list-objects vm uuid=' + vmToClone + ' | grep(user)') # todo get the requesting user somehow. Maybe browser session?
-vdsPersonalized = 1 # rename VDS to instance to include username
+sessionUUID = capture_command_output('xo-cli vm.clone id=' + vmToClone + ' name=vds-' + rUser + ' full_copy=' + slowClone, shell=True)
+subprocess.run('xo-cli vm.start id=' + sessionUUID, shell=True)
+subprocess.run('xo-cli vm.set id=' + sessionUUID + ' creation=' + rUser)
+
 vdsRegister = 2 # add VDS to instance to user's Authentik/guac/openrport

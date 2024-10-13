@@ -1,0 +1,9 @@
+{
+    "xo": "https://x.x.x.x or https://sub.domain.tld",
+    "svcCreds": {
+        "svcBrokerUser": "an_admin_of_XO",
+        "svcBrokerPass": "password_of_account"
+    },
+    "vmToClone": "uuid_of_vm",
+    "slowClone": "false"
+}
