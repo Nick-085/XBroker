@@ -1,9 +1,20 @@
 {
-    "xo": "https://x.x.x.x or https://sub.domain.tld",
-    "svcCreds": {
-        "svcBrokerUser": "an_admin_of_XO",
-        "svcBrokerPass": "password_of_account"
+    "xoSettings": {
+        "xo": "https://x.x.x.x or https://sub.domain.tld",
+        "svcCreds": {
+            "svcBrokerUser": "an_admin_of_XO",
+            "svcBrokerPass": "password_of_account"
+        },
+        "vmToClone": "uuid_of_vm",
+        "slowClone": "false"
     },
-    "vmToClone": "uuid_of_vm",
-    "slowClone": "false"
+    "dbSettings": {
+        "host": "x.x.x.x or hostname",
+        "port": "5432",
+        "dbName": "",
+        "dbUser": "",
+        "dbPass": "",
+        "vdsBrokerUser": "an_admin_of_chosen_provider",
+        "vdsBrokerPass": "password_of_account"
+    }
 }
