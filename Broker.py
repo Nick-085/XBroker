@@ -19,17 +19,16 @@ def capture_command_output(command):
 # Get requesting user
 rUser = str(input('Who is requesting this session?: '))
 
-# Connect to Xen Orchestra
-xo = config['xo']
-svcBrokerUser = config['svcCreds']['svcBrokerUser']
-svcBrokerPass = config['svcCreds']['svcBrokerPass']
-vmToClone = config['vmToClone']
-slowClone = config['slowClone']
+# XO connection vars
+xo = config['xoSettings']['xo']
+svcBrokerUser = config['xoSettings']['svcCreds']['svcBrokerUser']
+svcBrokerPass = config['xoSettings']['svcCreds']['svcBrokerPass']
+vmToClone = config['xoSettings']['vmToClone']
+slowClone = config['xoSettings']['slowClone']
 
 # Register service user to XO(A)
 subprocess.run('xo-cli register --au ' + '--url ' + xo + " " + xo + " " + svcBrokerUser + " " + svcBrokerPass, shell=True)
 print(" ")
-subprocess.run
 
 # Clone VM and change its name to include the username of the requestor
 sessionUUID = capture_command_output('xo-cli vm.clone id=' + vmToClone + ' name=vds-' + rUser + ' full_copy=' + slowClone, shell=True)
@@ -37,6 +36,18 @@ subprocess.run('xo-cli vm.start id=' + sessionUUID, shell=True)
 userSession = subprocess.run('xo-cli vm.set id=' + sessionUUID + ' creation=' + rUser)
 sessionVMName = "vds-" + rUser
 
+# Gets the IP Address for the VM
+sessionIP = subprocess.run('xo-cli rest get vms/' + sessionUUID + ' | grep mainIpAddress')
+
 vdsRegister = 2 # add VDS to instance to user's Authentik/guac/openrport
 
 # Connect to postgres db and add entry to user's connections
+conn = psycopg2.connect(
+    database = config['dbSettigs']['dbName'],
+    user = config['dbSettigs']['dbUser'],
+    password = config['dbSettigs']['dbPass'],
+    host = config['dbSettings']['dbHost'],
+    port = config['dbSettings']['dbPort']
+    )
+
+cur = conn.cursor()
