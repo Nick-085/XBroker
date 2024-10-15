@@ -17,7 +17,7 @@ def capture_command_output(command):
     return output
 
 # Get requesting user
-rUser = str(input('Who is requesting this session?: '))
+rUser = str(input('What is the username of the person requesting this session?: '))
 
 # XO connection vars
 xo = config['xoSettings']['xo']
@@ -37,7 +37,11 @@ userSession = subprocess.run('xo-cli vm.set id=' + sessionUUID + ' creation=' + 
 sessionVMName = "vds-" + rUser
 
 # Gets the IP Address for the VM
-sessionIP = subprocess.run('xo-cli rest get vms/' + sessionUUID + ' | grep mainIpAddress')
+sessionIP_c = subprocess.run('xo-cli rest get vms/' + sessionUUID)
+sessionIP_j = json.loads(sessionIP_c)
+sessionIP = sessionIP_j['mainIpAddress']
+
+print(sessionIP)
 
 vdsRegister = 2 # add VDS to instance to user's Authentik/guac/openrport
 
@@ -51,3 +55,12 @@ conn = psycopg2.connect(
     )
 
 cur = conn.cursor()
+
+insertQRY = sql.SQL("""
+        INSERT INTO guacamole_connection (connection_name, protocol)
+        VALUES (%s, %s)
+        RETURNING connection_id;
+    """)
+
+cur.execute(insertQRY, (sessionVMName, config['sessionSettings']['protocol']))
+connection_id = cur.fetchone()[0]
