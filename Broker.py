@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-
 import json
 import os
-# import psycopg2
 import re
 import subprocess
 import time
-# from psycopg2 import sql
+import requests
 
 # Load env vars
 with open('config.json') as confFile:
@@ -43,24 +41,23 @@ getMainIP = capture_command_output('xo-cli list-objects uuid=' + sessionUUID + '
 sessionIP = re.search(r'"mainIpAddress":\s*"([\d.]+)"', getMainIP).group(1)
 print(sessionIP)
 
-# vdsRegister = 2 # add VDS to instance to user's Authentik/guac/openrport
+# Add the VM to Apache Guacamole
+guac_url = "http://your-guacamole-server/api/session/data/postgresql/connections"
+guac_auth = ("guacadmin", "guacadmin_password")  # Replace with your Guacamole admin credentials
 
-# # Connect to postgres db and add entry to user's connections
-# conn = psycopg2.connect(
-#     database = config['dbSettigs']['dbName'],
-#     user = config['dbSettigs']['dbUser'],
-#     password = config['dbSettigs']['dbPass'],
-#     host = config['dbSettings']['dbHost'],
-#     port = config['dbSettings']['dbPort']
-#     )
+guac_connection = {
+    "name": sessionVMName,
+    "protocol": config['sessionSettings']['protocol'],
+    "parameters": {
+        "hostname": sessionIP,
+        "port": config['sessionSettings']['portNumber'],
+        "username": config['sessionSettings']['vmUName'],
+        "password": config['sessionSettings']['vmPass']
+    }
+}
 
-# cur = conn.cursor()
-
-# insertQRY = sql.SQL("""
-#         INSERT INTO guacamole_connection (connection_name, protocol)
-#         VALUES (%s, %s)
-#         RETURNING connection_id;
-#     """)
-
-# cur.execute(insertQRY, (sessionVMName, config['sessionSettings']['protocol']))
-# connection_id = cur.fetchone()[0]
+response = requests.post(guac_url, auth=guac_auth, json=guac_connection)
+if response.status_code == 200:
+    print(f"Successfully added {sessionVMName} to Guacamole.")
+else:
+    print(f"Failed to add {sessionVMName} to Guacamole. Status code: {response.status_code}")
