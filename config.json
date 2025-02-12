@@ -1,24 +1,16 @@
 {
     "xoSettings": {
-        "xo": "https://x.x.x.x or https://sub.domain.tld",
+        "xo": "http(s)://IP or Hostname and port (if not 443) of XO(A) server",
         "svcCreds": {
-            "svcBrokerUser": "an_admin_of_XO",
-            "svcBrokerPass": "password_of_account"
+            "svcBrokerUser": "an XO(A) admin username",
+            "svcBrokerPass": "an XO(A) admin password"
         },
-        "vmToClone": "uuid_of_template_vm",
-        "slowClone": "false (only set to true if you want the template VM runnning. Takes 5 mins instead of 2 seconds)"
+        "vmToClone": "UUID of VM you want to clone",
+        "slowClone": "false"
     },
-    "dbSettings": {
-        "dbHost": "x.x.x.x or hostname",
-        "dbPort": "5432",
-        "dbName": "",
-        "dbUser": "",
-        "dbPass": ""
-    },
+    "guacURL": "# http(s)://IP:port or http(s)://hostname:port",
     "sessionSettings": {
-        "protocol": "RDP, SSH, VNC",
-        "portNumber": "port #",
-        "vmUName": "",
-        "vmPass": ""
+        "protocol": "rdp",
+        "portNumber": "3389"
     }
 }
