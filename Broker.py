@@ -6,6 +6,7 @@ import subprocess
 import time
 import requests
 from getpass import getpass
+import sys
 
 # Load env vars
 with open('config.json') as confFile:
@@ -17,9 +18,16 @@ def capture_command_output(command):
     output = stream.read().strip()
     return output
 
+if len(sys.argv) != 3:
+    print("Usage: python3 Broker.py <username> <password>")
+    sys.exit(1)
+
+rUser = sys.argv[1]
+rPass = sys.argv[2]
+
 # Get requesting user
-rUser = str(input('Please enter your username: '))
-rPass = getpass('Please enter your password: ')
+# rUser = str(input('Please enter your username: '))
+# rPass = getpass('Please enter your password: ')
 
 # XO connection vars
 xo = config['xoSettings']['xo']
