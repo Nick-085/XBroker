@@ -5,7 +5,6 @@ import re
 import subprocess
 import time
 import requests
-from getpass import getpass
 import sys
 
 # Load env vars
@@ -24,10 +23,6 @@ if len(sys.argv) != 3:
 
 rUser = sys.argv[1]
 rPass = sys.argv[2]
-
-# Get requesting user
-# rUser = str(input('Please enter your username: '))
-# rPass = getpass('Please enter your password: ')
 
 # XO connection vars
 xo = config['xoSettings']['xo']
@@ -96,7 +91,7 @@ guac_connection = {
     "enable-audio": "",
     "security": "",
     "disable-auth": "",
-    "ignore-cert": "",
+    "ignore-cert": "true",
     "gateway-port": "",
     "server-layout": "",
     "timezone": "",
@@ -105,10 +100,10 @@ guac_connection = {
     "height": "",
     "dpi": "",
     "resize-method": "",
-    "console-audio": "",
+    "console-audio": "true",
     "disable-audio": "",
     "enable-audio-input": "",
-    "enable-printing": "",
+    "enable-printing": "true",
     "enable-drive": "",
     "create-drive-path": "",
     "enable-wallpaper": "",
@@ -152,8 +147,8 @@ guac_connection = {
     "sftp-directory": ""
   },
   "attributes": {
-    "max-connections": "",
-    "max-connections-per-user": "",
+    "max-connections": "1",
+    "max-connections-per-user": "1",
     "weight": "",
     "failover-only": "",
     "guacd-port": "",
