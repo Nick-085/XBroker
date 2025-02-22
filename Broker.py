@@ -17,12 +17,17 @@ def capture_command_output(command):
     output = stream.read().strip()
     return output
 
-if len(sys.argv) != 3:
-    print("Usage: python3 Broker.py <username> <password>")
+if len(sys.argv) != 4:
+    print("Usage: python3 Broker.py <username> <password> <vdiFile>")
     sys.exit(1)
 
 rUser = sys.argv[1]
 rPass = sys.argv[2]
+vdiFile = sys.argv[3]
+
+# Load VDI configuration file
+with open(vdiFile) as vdiConfFile:
+    vdiConfig = json.load(vdiConfFile)
 
 # XO connection vars
 xo = config['xoSettings']['xo']
@@ -36,9 +41,9 @@ subprocess.run('xo-cli register --au --url ' + xo + ' ' + xo + ' ' + svcBrokerUs
 print(" ")
 
 # Clone VM and change its name to include the username of the requestor
-sessionUUID = capture_command_output('xo-cli vm.clone id=' + vmToClone + ' name=vds-' + rUser + ' full_copy=' + slowClone)
+sessionName = f"{os.path.splitext(vdiFile)[0]}-{rUser}"
+sessionUUID = capture_command_output('xo-cli vm.clone id=' + vmToClone + ' name=' + sessionName + ' full_copy=' + slowClone)
 subprocess.run('xo-cli vm.start id=' + sessionUUID, shell=True)
-sessionVMName = "vds-" + rUser
 time.sleep(120)
 
 # Gets the IP Address for the VM
@@ -67,103 +72,17 @@ if not auth_token:
 # Add the VM to Apache Guacamole
 guac_url = config['guacURL'] + f"/api/session/data/postgresql/connections?token={auth_token}"
 
-guac_connection = {
-  "parentIdentifier": "ROOT",
-  "name": sessionVMName,
-  "protocol": config['sessionSettings']['protocol'],
-  "parameters": {
-    "port": config['sessionSettings']['portNumber'],
-    "read-only": "",
-    "swap-red-blue": "",
-    "cursor": "",
-    "color-depth": "",
-    "clipboard-encoding": "",
-    "disable-copy": "",
-    "disable-paste": "",
-    "dest-port": "",
-    "recording-exclude-output": "",
-    "recording-exclude-mouse": "",
-    "recording-include-keys": "",
-    "create-recording-path": "",
-    "enable-sftp": "",
-    "sftp-port": "",
-    "sftp-server-alive-interval": "",
-    "enable-audio": "",
-    "security": "",
-    "disable-auth": "",
-    "ignore-cert": "true",
-    "gateway-port": "",
-    "server-layout": "",
-    "timezone": "",
-    "console": "",
-    "width": "",
-    "height": "",
-    "dpi": "",
-    "resize-method": "",
-    "console-audio": "true",
-    "disable-audio": "",
-    "enable-audio-input": "",
-    "enable-printing": "true",
-    "enable-drive": "",
-    "create-drive-path": "",
-    "enable-wallpaper": "",
-    "enable-theming": "",
-    "enable-font-smoothing": "",
-    "enable-full-window-drag": "",
-    "enable-desktop-composition": "",
-    "enable-menu-animations": "",
-    "disable-bitmap-caching": "",
-    "disable-offscreen-caching": "",
-    "disable-glyph-caching": "",
-    "preconnection-id": "",
-    "hostname": sessionIP,
-    "username": rUser,
-    "password": rPass,
-    "domain": "",
-    "gateway-hostname": "",
-    "gateway-username": "",
-    "gateway-password": "",
-    "gateway-domain": "",
-    "initial-program": "",
-    "client-name": "",
-    "printer-name": "",
-    "drive-name": "",
-    "drive-path": "",
-    "static-channels": "",
-    "remote-app": "",
-    "remote-app-dir": "",
-    "remote-app-args": "",
-    "preconnection-blob": "",
-    "load-balance-info": "",
-    "recording-path": "",
-    "recording-name": "",
-    "sftp-hostname": "",
-    "sftp-host-key": "",
-    "sftp-username": "",
-    "sftp-password": "",
-    "sftp-private-key": "",
-    "sftp-passphrase": "",
-    "sftp-root-directory": "",
-    "sftp-directory": ""
-  },
-  "attributes": {
-    "max-connections": "1",
-    "max-connections-per-user": "1",
-    "weight": "",
-    "failover-only": "",
-    "guacd-port": "",
-    "guacd-encryption": "",
-    "guacd-hostname": ""
-  }
-}
-
 headers = {
     "Content-Type": "application/json"
 }
 
-response = requests.post(guac_url, json=guac_connection, headers=headers, verify=False)
+# Update vdiConfig with rUser and rPass
+vdiConfig['parameters']['username'] = rUser
+vdiConfig['parameters']['password'] = rPass
+
+response = requests.post(guac_url, json=vdiConfig, headers=headers, verify=False)
 
 if response.status_code == 200:
-    print(f"Successfully added {sessionVMName} to Guacamole.")
+    print(f"Successfully added {sessionName} to Guacamole.")
 else:
-    print(f"Failed to add {sessionVMName} to Guacamole. Status code: {response.status_code}")
+    print(f"Failed to add {sessionName} to Guacamole. Status code: {response.status_code}")

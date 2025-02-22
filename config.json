@@ -8,7 +8,11 @@
         "vmToClone": "UUID of VM you want to clone",
         "slowClone": "false"
     },
-    "guacURL": "# http(s)://IP:port or http(s)://hostname:port",
+    "guacURL": "http(s)://IP:port or http(s)://hostname:port",
+    "vdsConfFiles": [
+        "winvds.json", 
+        "ubuntuvds.json"
+    ],
     "sessionSettings": {
         "protocol": "rdp",
         "portNumber": "3389"
