@@ -17,13 +17,14 @@ def capture_command_output(command):
     output = stream.read().strip()
     return output
 
-if len(sys.argv) != 4:
-    print("Usage: python3 Broker.py <username> <password> <vdiFile>")
+if len(sys.argv) != 5:
+    print("Usage: python3 Broker.py <username> <password> <vdiFile> <vdiUUID>")
     sys.exit(1)
 
 rUser = sys.argv[1]
 rPass = sys.argv[2]
 vdiFile = sys.argv[3]
+vdiUUID = sys.argv[4]
 
 # Load VDI configuration file
 with open(vdiFile) as vdiConfFile:
@@ -42,7 +43,7 @@ print(" ")
 
 # Clone VM and change its name to include the username of the requestor
 sessionName = f"{os.path.splitext(vdiFile)[0]}-{rUser}"
-sessionUUID = capture_command_output('xo-cli vm.clone id=' + vmToClone + ' name=' + sessionName + ' full_copy=' + slowClone)
+sessionUUID = capture_command_output('xo-cli vm.clone id=' + vdiUUID + ' name=' + sessionName + ' full_copy=' + slowClone)
 subprocess.run('xo-cli vm.start id=' + sessionUUID, shell=True)
 time.sleep(120)
 

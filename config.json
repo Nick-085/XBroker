@@ -1,20 +1,15 @@
 {
     "xoSettings": {
-        "xo": "http(s)://IP or Hostname and port (if not 443) of XO(A) server",
+        "xo": "http(s)://domain-or-ip:port",
         "svcCreds": {
-            "svcBrokerUser": "an XO(A) admin username",
-            "svcBrokerPass": "an XO(A) admin password"
+            "svcBrokerUser": "service-user-mustBeAdmin",
+            "svcBrokerPass": "svcPassword"
         },
-        "vmToClone": "UUID of VM you want to clone",
         "slowClone": "false"
     },
-    "guacURL": "http(s)://IP:port or http(s)://hostname:port",
-    "vdsConfFiles": [
-        "winvds.json", 
-        "ubuntuvds.json"
-    ],
-    "sessionSettings": {
-        "protocol": "rdp",
-        "portNumber": "3389"
+    "guacURL": "http(s)://domain-or-ip:port",
+    "vdsConfFiles": {
+        "vdi-1.json": "uuid-of-template-vm", 
+        "vdi-2.json": "uuid-of-template-vm"
     }
 }
