@@ -1,15 +1,19 @@
 {
     "xoSettings": {
-        "xo": "http(s)://domain-or-ip:port",
+        "xo": "http(s)://server-IP-or-DNS-name:port",
         "svcCreds": {
-            "svcBrokerUser": "service-user-mustBeAdmin",
-            "svcBrokerPass": "svcPassword"
+            "svcBrokerUser": "service-account-admin",
+            "svcBrokerPass": "service-account-password"
         },
         "slowClone": "false"
     },
-    "guacURL": "http(s)://domain-or-ip:port",
+    "guacURL": "http(s)://guacamole-IP-or-DNS-name:port",
     "vdsConfFiles": {
-        "vdi-1.json": "uuid-of-template-vm", 
-        "vdi-2.json": "uuid-of-template-vm"
-    }
+        "vds-template1.json": {
+            "uuid": "uuid-of-vm-template1",
+            "expected_cidr_range": "expected-cidr-range"}, 
+        "winvds.json": {
+            "uuid": "uuid-of-vm-template2",
+            "expected_cidr_range": "expected-cidr-range"}
+        }
 }

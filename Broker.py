@@ -6,6 +6,7 @@ import subprocess
 import time
 import requests
 import sys
+import ipaddress
 
 # Load env vars
 with open('config.json') as confFile:
@@ -17,14 +18,15 @@ def capture_command_output(command):
     output = stream.read().strip()
     return output
 
-if len(sys.argv) != 5:
-    print("Usage: python3 Broker.py <username> <password> <vdiFile> <vdiUUID>")
+if len(sys.argv) != 6:
+    print("Usage: python3 Broker.py <username> <password> <vdiFile> <vdiUUID> <expectedCIDR>")
     sys.exit(1)
 
 rUser = sys.argv[1]
 rPass = sys.argv[2]
 vdiFile = sys.argv[3]
 vdiUUID = sys.argv[4]
+expectedCIDR = sys.argv[5]
 
 # Load VDI configuration file
 with open(vdiFile) as vdiConfFile:
@@ -34,7 +36,6 @@ with open(vdiFile) as vdiConfFile:
 xo = config['xoSettings']['xo']
 svcBrokerUser = config['xoSettings']['svcCreds']['svcBrokerUser']
 svcBrokerPass = config['xoSettings']['svcCreds']['svcBrokerPass']
-vmToClone = config['xoSettings']['vmToClone']
 slowClone = config['xoSettings']['slowClone']
 
 # Register service user to XO(A)
@@ -45,11 +46,25 @@ print(" ")
 sessionName = f"{os.path.splitext(vdiFile)[0]}-{rUser}"
 sessionUUID = capture_command_output('xo-cli vm.clone id=' + vdiUUID + ' name=' + sessionName + ' full_copy=' + slowClone)
 subprocess.run('xo-cli vm.start id=' + sessionUUID, shell=True)
-time.sleep(120)
 
 # Gets the IP Address for the VM
 getMainIP = capture_command_output('xo-cli list-objects uuid=' + sessionUUID + ' | grep mainIpAddress')
-sessionIP = re.search(r'"mainIpAddress":\s*"([\d.]+)"', getMainIP).group(1)
+sessionIP = re.search(r'"mainIpAddress":\s*"([\d.]+)"', getMainIP)
+
+# Validate the IP address against the expected CIDR range
+for i in range(18):
+    if sessionIP is None or ipaddress.IPv4Address(sessionIP.group(1)) not in ipaddress.IPv4Network(expectedCIDR):
+        time.sleep(5)
+        getMainIP = capture_command_output('xo-cli list-objects uuid=' + sessionUUID + ' | grep mainIpAddress')
+        sessionIP = re.search(r'"mainIpAddress":\s*"([\d.]+)"', getMainIP)
+    else:
+        break
+
+if sessionIP is None:
+    print("Failed to get a valid IP address for the VM.")
+    sys.exit(1)
+
+sessionIP = sessionIP.group(1)
 print(sessionIP)
 
 # User and pass in JSON for payload
@@ -77,9 +92,11 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# Update vdiConfig with rUser and rPass
+# Update vdiConfig with rUser, rPass, and sessionIP
 vdiConfig['parameters']['username'] = rUser
 vdiConfig['parameters']['password'] = rPass
+vdiConfig['parameters']['hostname'] = sessionIP
+vdiConfig['name'] = sessionName
 
 response = requests.post(guac_url, json=vdiConfig, headers=headers, verify=False)
 
@@ -87,3 +104,4 @@ if response.status_code == 200:
     print(f"Successfully added {sessionName} to Guacamole.")
 else:
     print(f"Failed to add {sessionName} to Guacamole. Status code: {response.status_code}")
+    print(f"Response content: {response.content}")

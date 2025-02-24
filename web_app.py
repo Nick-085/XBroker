@@ -17,10 +17,11 @@ def index():
         rUser = request.form['username']
         rPass = request.form['password']
         vdiFile = request.form['vdiFile']
-        vdiUUID = vdsConfFiles[vdiFile]
+        vdiUUID = vdsConfFiles[vdiFile]['uuid']
+        expectedCIDR = vdsConfFiles[vdiFile]['expected_cidr_range']
         
-        # Execute the Broker script with the provided username, password, VDI file, and UUID
-        process = subprocess.Popen(['python3', 'Broker.py', rUser, rPass, vdiFile, vdiUUID], stdin=subprocess.PIPE, text=True)
+        # Execute the Broker script with the provided username, password, VDI file, UUID, and expected CIDR range
+        process = subprocess.Popen(['python3', 'Broker.py', rUser, rPass, vdiFile, vdiUUID, expectedCIDR], stdin=subprocess.PIPE, text=True)
         process.communicate()
         
         return 'Broker script executed successfully.'
