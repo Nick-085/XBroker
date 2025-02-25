@@ -9,12 +9,12 @@
     },
     "guacURL": "http(s)://guacamole-IP-or-DNS-name:port",
     "vdsConfFiles": {
-        "vds-template1.json": {
-            "displayName": "Academic VDI",
+        "winvds.json": {
+            "displayName": "Windows 10 Desktop",
             "uuid": "uuid-of-vm-template1",
             "expected_cidr_range": "expected-cidr-range"}, 
-        "winvds.json": {
-            "displayName": "Engineering VDI",
+        "vds-linux.json": {
+            "displayName": "Ubuntu 22.04 Desktop",
             "uuid": "uuid-of-vm-template2",
             "expected_cidr_range": "expected-cidr-range"}
         }
