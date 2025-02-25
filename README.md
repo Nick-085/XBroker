@@ -22,3 +22,4 @@ chmod +x downloadPrereqs.sh
 5. `displayName` is the name that will be on the dropdown when the user selects what desktop they want to deploy.
 6. `uuid` is the UUID of the template VM in XO(A).
 7. `expected_cidr_range` is the CIDR range that the VM will have an IP address in. This is done because Windows provides a `169.254.0.0/16` address to XCP-ng/Citrix Tools almost instantly on boot. This tool retries the IP address retrieval until it is within the expected range.
+8. Run `start.sh` to start `web_app.py`. This way, you can exit the terminal without stopping the service.
