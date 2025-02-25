@@ -30,9 +30,9 @@ def index():
         <form method="post">
             Username: <input type="text" name="username"><br>
             Password: <input type="password" name="password"><br>
-            VDI File: <select name="vdiFile">
-                {% for file in vdsConfFiles %}
-                    <option value="{{ file }}">{{ file }}</option>
+            Choose a VDI: <select name="vdiFile">
+                {% for file, details in vdsConfFiles.items() %}
+                    <option value="{{ file }}">{{ details['displayName'] }}</option>
                 {% endfor %}
             </select><br>
             <input type="submit" value="Submit">
