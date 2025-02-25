@@ -10,9 +10,11 @@
     "guacURL": "http(s)://guacamole-IP-or-DNS-name:port",
     "vdsConfFiles": {
         "vds-template1.json": {
+            "displayName": "Academic VDI",
             "uuid": "uuid-of-vm-template1",
             "expected_cidr_range": "expected-cidr-range"}, 
         "winvds.json": {
+            "displayName": "Engineering VDI",
             "uuid": "uuid-of-vm-template2",
             "expected_cidr_range": "expected-cidr-range"}
         }
