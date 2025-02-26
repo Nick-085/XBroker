@@ -1,0 +1,4 @@
+flask
+gunicorn
+requests
+# Add other dependencies as needed
