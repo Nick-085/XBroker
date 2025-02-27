@@ -24,7 +24,8 @@ git clone https://github.com/Nick-085/XBroker xbroker
 cd xbroker
 ```
 4. Edit `config.json` file for your environment. For more information, view the next section.
-5. Run `docker build `
+5. Run `docker build -t xbroker ./`
+6. Run `docker run -d -p 8000:8000 xbroker:latest`
 
 ## Setting Up Your Environment
 1. Edit `config.json` file for your environment.
