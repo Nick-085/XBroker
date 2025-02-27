@@ -14,4 +14,5 @@ nvm install 22
 sudo npm install -g xo-cli
 sudo chmod +x start.sh
 sudo chmod +x web_app.py
+sudo chmod +x wsgi.py
 sudo chmod +x Broker.py

@@ -1,1 +1,1 @@
-nohup python3 web_app.py > /dev/null 2>&1 &
+nohup python3 wsgi.py > /dev/null 2>&1 &
