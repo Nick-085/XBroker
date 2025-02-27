@@ -1,9 +1,9 @@
 ## About the Project
 XBroker is a project designed to be an alternative to Citrix VDI and Omnissa Horizon. It uses Xen Orchestra and Apache Guacamole to clone a template VM, start it, and assign it to the requesting user. The ultimate goal is for this project to be ported to as many hypervisor platforms as possible.
 
-## Install Instructions
+## Install Instructions - VM
 1. You will need a working Guacamole instance. You can find easy instructions on how to deploy it [here](https://github.com/boschkundendienst/guacamole-docker-compose) or [here](https://www.youtube.com/watch?v=DGw6P5Lkj-U). __**All users will need the "add connection" permission in their account settings.**__
-2. Ensure you are using a non-root account with sudo permissions.
+2. Ensure you are using a non-root account with `sudo` permissions.
 3. Using an Ubuntu/Debian machine (tested and working on Ubuntu 22.04.5 LTS) run the following (please read the scripts in GitHub. You should never blindly run a script from the internet):
 ```
 sudo apt install git -y 
@@ -13,6 +13,18 @@ chmod +x downloadPrereqs.sh
 ./downloadPrereqs.sh
 ```
 *The `downloadPrereqs.sh` script downloads and installs npm, nvm, Python3, pip3, flask, xo-cli, and applies permissions to execute necessary files.*
+
+## Install Instructions - Docker
+1. You will need a working Guacamole instance. You can find easy instructions on how to deploy it [here](https://github.com/boschkundendienst/guacamole-docker-compose) or [here](https://www.youtube.com/watch?v=DGw6P5Lkj-U). __**All users will need the "add connection" permission in their account settings.**__
+2. Use an account that can use either `sudo` or is in the `docker` group.
+3. Run the following:
+```
+sudo apt install git -y 
+git clone https://github.com/Nick-085/XBroker xbroker
+cd xbroker
+```
+4. Edit `config.json` file for your environment. For more information, view the next section.
+5. Run `docker build `
 
 ## Setting Up Your Environment
 1. Edit `config.json` file for your environment.
