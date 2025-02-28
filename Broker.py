@@ -18,6 +18,9 @@ def capture_command_output(command):
     output = stream.read().strip()
     return output
 
+def get_config_value(key, default=None):
+    return os.getenv(key, config.get(key, default))
+
 if len(sys.argv) != 6:
     print("Usage: python3 Broker.py <username> <password> <vdiFile> <vdiUUID> <expectedCIDR>")
     sys.exit(1)
@@ -33,10 +36,10 @@ with open(vdiFile) as vdiConfFile:
     vdiConfig = json.load(vdiConfFile)
 
 # XO connection vars
-xo = config['xoSettings']['xo']
-svcBrokerUser = config['xoSettings']['svcCreds']['svcBrokerUser']
-svcBrokerPass = config['xoSettings']['svcCreds']['svcBrokerPass']
-slowClone = config['xoSettings']['slowClone']
+xo = get_config_value('XO_URL', config['xoSettings']['xo'])
+svcBrokerUser = get_config_value('SVC_BROKER_USER', config['xoSettings']['svcCreds']['svcBrokerUser'])
+svcBrokerPass = get_config_value('SVC_BROKER_PASS', config['xoSettings']['svcCreds']['svcBrokerPass'])
+slowClone = get_config_value('SLOW_CLONE', config['xoSettings']['slowClone'])
 
 # Register service user to XO(A)
 subprocess.run('xo-cli register --au --url ' + xo + ' ' + xo + ' ' + svcBrokerUser + ' ' + svcBrokerPass, shell=True)
@@ -74,7 +77,7 @@ auth_payload = {
 }
 
 # Login to guac and get token
-auth_response = requests.post(config['guacURL'] + "/api/tokens", data=auth_payload, verify=False)
+auth_response = requests.post(get_config_value('GUAC_URL', config['guacURL']) + "/api/tokens", data=auth_payload, verify=False)
 if auth_response.status_code != 200:
     print(f"Failed to authenticate with Guacamole. Status code: {auth_response.status_code}")
     print(f"Response content: {auth_response.content}")
@@ -86,7 +89,7 @@ if not auth_token:
     exit(1)
 
 # Add the VM to Apache Guacamole
-guac_url = config['guacURL'] + f"/api/session/data/postgresql/connections?token={auth_token}"
+guac_url = get_config_value('GUAC_URL', config['guacURL']) + f"/api/session/data/postgresql/connections?token={auth_token}"
 
 headers = {
     "Content-Type": "application/json"
