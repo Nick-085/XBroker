@@ -27,6 +27,9 @@ cd xbroker
 5. Run `docker build -t xbroker ./`
 6. Run `docker run -d -p 8000:8000 xbroker:latest`
 
+To use environment variables to manage configuration, run docker like this:
+`docker run -d -p 8000:8000 -e XO_URL="https://xoa.servers.udayton.edu/" -e SVC_BROKER_USER="user1" -e SVC_BROKER_PASS="xxxxxxx" xbroker:latest`
+
 ## Setting Up Your Environment
 1. Edit `config.json` file for your environment.
 2. Enter your Xen Orchestra and Guacamole settings. The XO user MUST be an admin in XO(A).
