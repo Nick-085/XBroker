@@ -17,6 +17,7 @@ svcBrokerPass = get_config_value('SVC_BROKER_PASS', config['xoSettings']['svcCre
 guac_url = get_config_value('GUAC_URL', config['guacURL'])
 guac_admin_user = get_config_value('GUAC_ADMIN_USER', config['guacAdminUser'])
 guac_admin_pass = get_config_value('GUAC_ADMIN_PASS', config['guacAdminPass'])
+cleanup_interval = get_config_value('CLEANUP_INTERVAL', config['cleanupInterval'])
 
 # Register service user to XO(A)
 subprocess.run(f'xo-cli register --au --url {xoa_url} {xoa_url} {svcBrokerUser} {svcBrokerPass}', shell=True)

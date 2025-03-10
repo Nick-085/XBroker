@@ -10,7 +10,7 @@
     "guacURL": "http(s)://guacamole-IP-or-DNS-name:port",
     "guacAdminUser": "",
     "guacAdminPass": "",
-    "cleanupTimeout": 10,
+    "cleanupInterval": 10,
     "vdsConfFiles": {
         "winvds.json": {
             "displayName": "Windows 10 Desktop",
