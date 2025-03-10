@@ -3,7 +3,7 @@ import json
 import requests
 import os
 import subprocess
-import time  # Import time module
+import time
 
 # Load config file
 with open('config.json') as confFile:
@@ -112,16 +112,8 @@ while True:
         vm_power_state = vm['power_state']
         if is_stale_session(vm_name):
             if vm_power_state == 'Halted':
-                confirm = input(f"Do you want to delete VM {vm_name} with UUID {vm_uuid}? (yes/no): ")
-                if confirm.lower() == 'yes':
-                    delete_vm(vm_uuid)
-                    delete_guac_session(vm_name)
-                else:
-                    print(f"Skipping deletion of VM {vm_name}.")
-            else:
-                print(f"VM {vm_name} is not halted and will not be deleted.")
-        else:
-            print(f"VM {vm_name} is not identified as a stale session.")
+                delete_vm(vm_uuid)
+                delete_guac_session(vm_name)
 
     print(f"Sleeping for {cleanup_interval} minute(s) before next cleanup cycle.")
     time.sleep(cleanup_interval * 60)
