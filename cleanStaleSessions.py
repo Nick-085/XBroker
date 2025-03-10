@@ -3,6 +3,7 @@ import json
 import requests
 import os
 import subprocess
+import time  # Import time module
 
 # Load config file
 with open('config.json') as confFile:
@@ -65,8 +66,6 @@ def delete_guac_session(session_name):
         print(f"Response content: {connections_response.content}")
         return
 
-    print(f"Connections: {connections}")  # Debugging line to print the connections
-
     connection_id = None
     for connection in connections.values():
         if connection['name'] == session_name:
@@ -88,44 +87,41 @@ def delete_guac_session(session_name):
 def is_stale_session(session_name):
     for template, details in config['vdsConfFiles'].items():
         if session_name.startswith(details['displayName']) and "template" not in session_name.lower():
-            print(f"Session {session_name} matches display name {details['displayName']} and does not contain 'template'.")  # Debugging line
             return True
         if session_name.startswith(template.split('.')[0]) and "template" not in session_name.lower():
-            print(f"Session {session_name} matches pattern {template.split('.')[0]} and does not contain 'template'.")  # Debugging line
             return True
-    print(f"Session {session_name} does not match any display name or contains 'template'.")  # Debugging line
     return False
 
-# Get all VMs
-vm_list = subprocess.run('xo-cli list-objects type=VM', shell=True, capture_output=True, text=True)
-print("VM List Output:", vm_list.stdout)  # Debugging line to print the output
-if vm_list.returncode != 0:
-    print(f"Failed to list VMs. Error: {vm_list.stderr}")
-    exit(1)
+while True:
+    # Get all VMs
+    vm_list = subprocess.run('xo-cli list-objects type=VM', shell=True, capture_output=True, text=True)
+    if vm_list.returncode != 0:
+        print(f"Failed to list VMs. Error: {vm_list.stderr}")
+        exit(1)
 
-try:
-    vms = json.loads(vm_list.stdout)
-except json.JSONDecodeError:
-    print("Failed to parse JSON response from xo-cli list-objects.")
-    print(f"Response content: {vm_list.stdout}")
-    exit(1)
+    try:
+        vms = json.loads(vm_list.stdout)
+    except json.JSONDecodeError:
+        print("Failed to parse JSON response from xo-cli list-objects.")
+        print(f"Response content: {vm_list.stdout}")
+        exit(1)
 
-for vm in vms:
-    vm_uuid = vm['id']
-    vm_name = vm['name_label']
-    vm_power_state = vm['power_state']
-    print(f"Checking VM: {vm_name}, UUID: {vm_uuid}, Power State: {vm_power_state}")  # Debugging line
-    if is_stale_session(vm_name):
-        print(f"VM {vm_name} is identified as a stale session.")  # Debugging line
-        if vm_power_state == 'Halted':
-            print(f"VM {vm_name} is halted and will be deleted.")  # Debugging line
-            confirm = input(f"Do you want to delete VM {vm_name} with UUID {vm_uuid}? (yes/no): ")
-            if confirm.lower() == 'yes':
-                delete_vm(vm_uuid)
-                delete_guac_session(vm_name)
+    for vm in vms:
+        vm_uuid = vm['id']
+        vm_name = vm['name_label']
+        vm_power_state = vm['power_state']
+        if is_stale_session(vm_name):
+            if vm_power_state == 'Halted':
+                confirm = input(f"Do you want to delete VM {vm_name} with UUID {vm_uuid}? (yes/no): ")
+                if confirm.lower() == 'yes':
+                    delete_vm(vm_uuid)
+                    delete_guac_session(vm_name)
+                else:
+                    print(f"Skipping deletion of VM {vm_name}.")
             else:
-                print(f"Skipping deletion of VM {vm_name}.")
+                print(f"VM {vm_name} is not halted and will not be deleted.")
         else:
-            print(f"VM {vm_name} is not halted and will not be deleted.")  # Debugging line
-    else:
-        print(f"VM {vm_name} is not identified as a stale session.")  # Debugging line
+            print(f"VM {vm_name} is not identified as a stale session.")
+
+    print(f"Sleeping for {cleanup_interval} minute(s) before next cleanup cycle.")
+    time.sleep(cleanup_interval * 60)
