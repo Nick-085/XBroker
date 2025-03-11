@@ -15,10 +15,31 @@
         "winvds.json": {
             "displayName": "Windows 10 Desktop",
             "uuid": "uuid-of-vm-template1",
-            "expected_cidr_range": "expected-cidr-range"}, 
+            "expected_cidr_range": "expected-cidr-range"
+        }, 
         "vds-linux.json": {
             "displayName": "Ubuntu 22.04 Desktop",
             "uuid": "uuid-of-vm-template2",
-            "expected_cidr_range": "expected-cidr-range"}
+            "expected_cidr_range": "expected-cidr-range"
         }
+    },
+    "samlSettings": {
+        "SP_ENTITY_ID": "https://your-sp-entity-id",
+        "SP_PRIVATE_KEY": "path/to/your/private-key.pem",
+        "SP_CERTIFICATE": "path/to/your/certificate.pem",
+        "IDP_ENTITY_ID": "https://your-idp-entity-id",
+        "IDP_SSO_URL": "https://your-idp-sso-url",
+        "IDP_SSO_BINDING": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+        "IDP_CERTIFICATE": "path/to/idp/certificate.pem"
+    },
+    "ldapSettings": {
+        "LDAP_HOST": "your-ldap-host",
+        "LDAP_BASE_DN": "your-base-dn",
+        "LDAP_USER_DN": "your-user-dn",
+        "LDAP_GROUP_DN": "your-group-dn",
+        "LDAP_USER_RDN_ATTR": "cn",
+        "LDAP_USER_LOGIN_ATTR": "uid",
+        "LDAP_BIND_USER_DN": "your-bind-user-dn",
+        "LDAP_BIND_USER_PASSWORD": "your-bind-user-password"
+    }
 }

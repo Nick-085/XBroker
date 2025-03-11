@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, redirect, url_for, session
+from flask_saml2.sp import ServiceProvider
+from flask_ldap3_login import LDAP3LoginManager
 import subprocess
 import json
+import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 # Load config file
 with open('config.json') as confFile:
@@ -11,8 +15,75 @@ with open('config.json') as confFile:
 
 vdsConfFiles = config['vdsConfFiles']
 
+def get_config_value(key, default=None):
+    return os.getenv(key, config.get(key, default))
+
+# SAML Configuration
+class MyServiceProvider(ServiceProvider):
+    def get_sp_entity_id(self):
+        return get_config_value('SP_ENTITY_ID', config['samlSettings']['SP_ENTITY_ID'])
+
+    def get_sp_private_key(self):
+        return get_config_value('SP_PRIVATE_KEY', config['samlSettings']['SP_PRIVATE_KEY'])
+
+    def get_sp_certificate(self):
+        return get_config_value('SP_CERTIFICATE', config['samlSettings']['SP_CERTIFICATE'])
+
+    def get_idp_entity_id(self):
+        return get_config_value('IDP_ENTITY_ID', config['samlSettings']['IDP_ENTITY_ID'])
+
+    def get_idp_sso_url(self):
+        return get_config_value('IDP_SSO_URL', config['samlSettings']['IDP_SSO_URL'])
+
+    def get_idp_sso_binding(self):
+        return get_config_value('IDP_SSO_BINDING', config['samlSettings']['IDP_SSO_BINDING'])
+
+    def get_idp_certificate(self):
+        return get_config_value('IDP_CERTIFICATE', config['samlSettings']['IDP_CERTIFICATE'])
+
+sp = MyServiceProvider()
+app.register_blueprint(sp.create_blueprint(), url_prefix='/saml')
+
+# LDAP Configuration
+app.config['LDAP_HOST'] = get_config_value('LDAP_HOST', config['ldapSettings']['LDAP_HOST'])
+app.config['LDAP_BASE_DN'] = get_config_value('LDAP_BASE_DN', config['ldapSettings']['LDAP_BASE_DN'])
+app.config['LDAP_USER_DN'] = get_config_value('LDAP_USER_DN', config['ldapSettings']['LDAP_USER_DN'])
+app.config['LDAP_GROUP_DN'] = get_config_value('LDAP_GROUP_DN', config['ldapSettings']['LDAP_GROUP_DN'])
+app.config['LDAP_USER_RDN_ATTR'] = get_config_value('LDAP_USER_RDN_ATTR', config['ldapSettings']['LDAP_USER_RDN_ATTR'])
+app.config['LDAP_USER_LOGIN_ATTR'] = get_config_value('LDAP_USER_LOGIN_ATTR', config['ldapSettings']['LDAP_USER_LOGIN_ATTR'])
+app.config['LDAP_BIND_USER_DN'] = get_config_value('LDAP_BIND_USER_DN', config['ldapSettings']['LDAP_BIND_USER_DN'])
+app.config['LDAP_BIND_USER_PASSWORD'] = get_config_value('LDAP_BIND_USER_PASSWORD', config['ldapSettings']['LDAP_BIND_USER_PASSWORD'])
+
+ldap_manager = LDAP3LoginManager(app)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = ldap_manager.authenticate(username, password)
+        if user:
+            session['user'] = username
+            return redirect(url_for('index'))
+        else:
+            return 'Invalid credentials', 401
+    return render_template_string('''
+        <form method="post">
+            Username: <input type="text" name="username"><br>
+            Password: <input type="password" name="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    ''')
+
+@app.route('/saml-login')
+def saml_login():
+    return redirect(url_for('flask_saml2_sp.login'))
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         rUser = request.form['username']
         rPass = request.form['password']
