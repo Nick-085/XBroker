@@ -4,6 +4,8 @@
 sudo apt install python3 -y
 sudo apt install python3-pip -y
 sudo apt install python3-flask -y
+pip install flask-ldap3-login
+pip install flask-saml2
 
 ### This portion can be found at https://nodejs.org/en/download
 sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
