@@ -14,7 +14,7 @@
     "vdsConfFiles": {
         "winvds.json": {
             "displayName": "Windows 10 Desktop",
-            "uuid": "uuid-of-vm-template1",
+            "uuid": "01f2ebb7-6df9-3d63-eb4a-7aab28fd5d4e",
             "expected_cidr_range": "expected-cidr-range"}, 
         "vds-linux.json": {
             "displayName": "Ubuntu 22.04 Desktop",

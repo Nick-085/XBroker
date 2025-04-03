@@ -14,7 +14,7 @@ chmod +x downloadPrereqs.sh
 ```
 *The `downloadPrereqs.sh` script downloads and installs npm, nvm, Python3, pip3, flask, xo-cli, and applies permissions to execute necessary files.*
 
-## Install Instructions - Docker (thanks @jgrafton for handholding me in building this)
+## Install Instructions - Docker (thanks [John Grafton](https://github.com/jgrafton))
 1. You will need a working Guacamole instance. You can find easy instructions on how to deploy it [here](https://github.com/boschkundendienst/guacamole-docker-compose) or [here](https://www.youtube.com/watch?v=DGw6P5Lkj-U). <ins>**All users will need the "add connection" permission in their account settings.**</ins>
 2. Use an account that can use either `sudo` or is in the `docker` group.
 3. Run the following:
@@ -28,7 +28,7 @@ cd xbroker
 6. Run `docker run -d -p 8000:8000 xbroker:latest`
 
 To use environment variables to manage configuration, run docker like this:
-`docker run -d -p 8000:8000 -e XO_URL="https://xoa.servers.udayton.edu/" -e SVC_BROKER_USER="user1" -e SVC_BROKER_PASS="xxxxxxx" xbroker:latest`
+`docker run -d -p 8000:8000 -e XO_URL="https://xoa.domain.tld/" -e SVC_BROKER_USER="user1" -e SVC_BROKER_PASS="xxxxxxx" xbroker:latest`
 
 ## Setting Up Your Environment
 1. Edit `config.json` file for your environment.
@@ -46,5 +46,5 @@ To use environment variables to manage configuration, run docker like this:
 
 5. `displayName` is the name that will be on the dropdown when the user selects what desktop they want to deploy.
 6. `uuid` is the UUID of the template VM in XO(A).
-7. `expected_cidr_range` is the CIDR range that the VM will have an IP address in. This is done because Windows provides a `169.254.0.0/16` address to XCP-ng/Citrix Tools almost instantly on boot. This tool retries the IP address retrieval until it is within the expected range.
+7. `expected_cidr_range` is the CIDR range that the VM will have an IP address in. We need to specify this because Windows provides a `169.254.0.0/16` address to XCP-ng/Citrix Tools almost instantly on boot. Not specifying this caused the APIPA address to be imported to Guacamole instead. This tool retries the IP address retrieval until it is within the expected range.
 8. Run `start.sh` to start `wsgi.py`. This way, you can exit the terminal without stopping the service.
