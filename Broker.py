@@ -32,8 +32,49 @@ vdiUUID = sys.argv[4]
 expectedCIDR = sys.argv[5]
 
 # Load VDI configuration file
-with open(vdiFile) as vdiConfFile:
-    vdiConfig = json.load(vdiConfFile)
+try:
+    with open(os.path.join('vdsProfiles', vdiFile)) as vdiConfFile:
+        vdiProfile = json.load(vdiConfFile)
+        
+        # Check if profile has the required structure
+        if 'vdsProperties' not in vdiProfile:
+            print(f"Error: Profile missing vdsProperties section")
+            sys.exit(1)
+        if 'guacPayload' not in vdiProfile:
+            print(f"Error: Profile missing guacPayload section")
+            sys.exit(1)
+            
+        # Extract guacPayload for Guacamole configuration
+        vdiConfig = vdiProfile['guacPayload']
+        
+        # Verify UUID and CIDR match what was passed
+        if vdiProfile['vdsProperties']['uuid'] != vdiUUID:
+            print(f"Error: UUID mismatch in profile file")
+            sys.exit(1)
+        if vdiProfile['vdsProperties']['expected_cidr_range'] != expectedCIDR:
+            print(f"Error: CIDR mismatch in profile file")
+            sys.exit(1)
+            
+        # Ensure required guacPayload structure
+        if not isinstance(vdiConfig, dict):
+            print(f"Error: guacPayload must be an object")
+            sys.exit(1)
+        if 'parameters' not in vdiConfig:
+            vdiConfig['parameters'] = {}
+        if 'attributes' not in vdiConfig:
+            vdiConfig['attributes'] = {}
+            
+except FileNotFoundError:
+    print(f"Error: Profile file {vdiFile} not found in vdsProfiles directory")
+    sys.exit(1)
+except json.JSONDecodeError as e:
+    print(f"Error: Invalid JSON in profile file: {str(e)}")
+    sys.exit(1)
+except Exception as e:
+    print(f"Error loading VDS profile: {str(e)}")
+    sys.exit(1)
+
+print(f"Successfully loaded profile for {vdiFile}")
 
 # XO connection vars
 xo = get_config_value('XO_URL', config['xoSettings']['xo'])
@@ -77,7 +118,8 @@ auth_payload = {
 }
 
 # Login to guac and get token
-auth_response = requests.post(get_config_value('GUAC_URL', config['guacURL']) + "/api/tokens", data=auth_payload, verify=False)
+guac_url = get_config_value('GUAC_URL', config['guacURL'])
+auth_response = requests.post(f"{guac_url}/api/tokens", data=auth_payload, verify=False)
 if auth_response.status_code != 200:
     print(f"Failed to authenticate with Guacamole. Status code: {auth_response.status_code}")
     print(f"Response content: {auth_response.content}")
@@ -89,7 +131,7 @@ if not auth_token:
     exit(1)
 
 # Add the VM to Apache Guacamole
-guac_url = get_config_value('GUAC_URL', config['guacURL']) + f"/api/session/data/postgresql/connections?token={auth_token}"
+api_url = f"{guac_url}/api/session/data/postgresql/connections?token={auth_token}"
 
 headers = {
     "Content-Type": "application/json"
@@ -101,10 +143,19 @@ vdiConfig['parameters']['password'] = rPass
 vdiConfig['parameters']['hostname'] = sessionIP
 vdiConfig['name'] = sessionName
 
-response = requests.post(guac_url, json=vdiConfig, headers=headers, verify=False)
+response = requests.post(api_url, json=vdiConfig, headers=headers, verify=False)
 
 if response.status_code == 200:
-    print(f"Successfully added {sessionName} to Guacamole.")
+    connection_data = response.json()
+    connection_id = connection_data.get('identifier')
+    # Include all components needed for URL construction
+    print(json.dumps({
+        "status": "success",
+        "message": f"Successfully added {sessionName} to Guacamole",
+        "connection_id": connection_id,
+        "connection_type": "c",  # 'c' for connection
+        "auth_provider": "postgresql"  # we're using postgresql
+    }))
 else:
     print(f"Failed to add {sessionName} to Guacamole. Status code: {response.status_code}")
     print(f"Response content: {response.content}")

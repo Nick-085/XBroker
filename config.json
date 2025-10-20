@@ -1,24 +1,14 @@
 {
     "xoSettings": {
-        "xo": "http(s)://server-IP-or-DNS-name:port",
+        "xo": "http://192.168.0.60",
         "svcCreds": {
-            "svcBrokerUser": "service-account-admin",
-            "svcBrokerPass": "service-account-password"
+            "svcBrokerUser": "admin",
+            "svcBrokerPass": "admin"
         },
         "slowClone": "false"
     },
-    "guacURL": "http(s)://guacamole-IP-or-DNS-name:port",
-    "guacAdminUser": "",
-    "guacAdminPass": "",
-    "cleanupInterval": 10,
-    "vdsConfFiles": {
-        "winvds.json": {
-            "displayName": "Windows 10 Desktop",
-            "uuid": "01f2ebb7-6df9-3d63-eb4a-7aab28fd5d4e",
-            "expected_cidr_range": "expected-cidr-range"}, 
-        "vds-linux.json": {
-            "displayName": "Ubuntu 22.04 Desktop",
-            "uuid": "uuid-of-vm-template2",
-            "expected_cidr_range": "expected-cidr-range"}
-        }
+    "guacURL": "https://192.168.0.70:8443",
+    "guacAdminUser": "guacadmin",
+    "guacAdminPass": "guacadmin",
+    "cleanupInterval": 1
 }

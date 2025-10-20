@@ -1,0 +1,226 @@
+/* Modern layout and animated gradient background */
+:root{
+  --bg:#0f1724;
+  --card-bg: rgba(255,255,255,0.03);
+  --muted: #9aa4b2;
+  --accent: #111827;
+  --glass: rgba(255,255,255,0.06);
+}
+*{box-sizing:border-box}
+html,body,#app{height:100%}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:#e6eef6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+}
+.animated-gradient{
+  position:fixed;inset:-50%;z-index:-1;
+  filter:blur(75px) saturate(110%);
+  background:linear-gradient(120deg,
+    #7c3aed44,
+    #06b6d444,
+    #f9731644,
+    #ef444444,
+    #7c3aed44
+  );
+  background-size:1000% 1000%;
+  animation:moveGradient 35s ease-in-out infinite;
+  opacity:0.9;
+}
+@keyframes moveGradient{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:220px;padding:28px 18px;border-right:1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px); background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+.brand{font-weight:700;margin-bottom:18px}
+.links{display:flex;flex-direction:column;gap:8px}
+.link{
+  background:transparent;
+  border:0;
+  padding:10px 12px;
+  text-align:left;
+  color:var(--muted);
+  border-radius:8px;
+  cursor:pointer;
+  text-decoration:none;
+  font-family:inherit;
+  font-size:inherit;
+  display:block;
+  width:100%;
+}
+.link:hover {
+  background:var(--glass);
+  color:#fff;
+}
+.link.active{
+  background:var(--glass);
+  color:#fff
+}
+.main{flex:1;display:flex;flex-direction:column}
+.topbar{display:flex;justify-content:space-between;padding:22px;border-bottom:1px solid rgba(255,255,255,0.02)}
+.topbar .tabs{display:flex;gap:8px}
+.tab{background:transparent;border:0;padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+.launch{background:#000;color:#fff;border:0;padding:8px 14px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,0.4);cursor:pointer}
+.content{padding:40px}
+.h1{font-size:34px;margin:0 0 6px}
+.h2{color:var(--muted);margin:0 0 22px}
+.card-row{display:flex;gap:18px;flex-wrap:wrap}
+.card {
+  width:220px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 6px 20px rgba(2,6,23,0.6);
+  transition:transform 0.2s ease, background 0.2s ease;
+  cursor:pointer;
+  position: relative;
+}
+.card:hover {
+  transform:translateY(-8px);
+  background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+}
+.card.loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+.card.loading::before {
+  content: "Starting desktop...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  color: white;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.card .cover{
+  height:140px;
+  border-radius:10px;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:flex-end;
+  padding:12px;
+  color:#fff;
+  font-weight:700;
+  transition:transform 0.2s ease;
+}
+.card:hover .cover {
+  transform:scale(1.02);
+}
+.card .title{font-weight:700;margin-top:10px}
+.card .desc{font-size:13px;color:var(--muted);margin-top:8px}
+.muted{color:var(--muted)}
+/* modal */
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);}
+.modal .modal-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:12px;width:360px;box-shadow:0 10px 40px rgba(2,6,23,0.8)}
+.modal h2{margin:0 0 6px}
+.modal .muted{margin:0 0 12px}
+.modal input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:transparent;
+  color:inherit;
+  margin-bottom:12px;
+}
+.modal .error {
+  color: #ef4444;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.modal .error.hidden {
+  display: none;
+}
+.modal .modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+.card {
+  position: relative;
+}
+.launch-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: linear-gradient(90deg,#7c3aed,#06b6d4);
+  color: #fff;
+  border: 0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+.launch-btn:hover {
+  transform: translateY(-2px);
+}
+.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff}
+.hidden{display:none}
+/* User management */
+.user-form {
+  max-width: 400px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 24px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.user-form h2 {
+  margin: 0 0 20px;
+}
+
+.user-form input[type="text"],
+.user-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+  color: inherit;
+  margin-bottom: 12px;
+}
+
+.user-form label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.user-form .error {
+  color: #ef4444;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.user-form .error.hidden {
+  display: none;
+}
+
+.user-form button {
+  margin-top: 12px;
+}
+
+/* responsive */
+@media (max-width:900px){.sidebar{display:none}.card{width:45vw}}

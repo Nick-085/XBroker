@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XBroker - Desktop Environments</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="animated-gradient" aria-hidden="true"></div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Welcome <span id="user-name">Guest</span></div>
+      <nav class="links">
+        <button class="link" data-route="home">Home</button>
+        <button class="link" data-route="browse">Browse</button>
+        <button class="link" data-route="faq">FAQ</button>
+        <button class="link" data-route="users">Users</button>
+        <a href="https://github.com/Nick-085/XBroker" target="_blank" rel="noopener" class="link">IT Support</a>
+        <button id="logout-btn" class="link">Logout</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section id="content" class="content">
+        <!-- Content will be rendered by JS -->
+      </section>
+    </main>
+  </div>
+
+    <!-- Login Modal -->
+  <div id="login-modal" class="modal show">
+    <div class="modal-panel">
+      <h2>Sign in</h2>
+      <p class="muted">Enter your credentials</p>
+      <input id="username-input" type="text" placeholder="Username" required />
+      <input id="password-input" type="password" placeholder="Password" required />
+      <div id="login-error" class="error hidden"></div>
+      <div class="modal-actions">
+        <button id="login-btn" class="btn primary">Sign in</button>
+      </div>
+    </div>
+  </div>  <script src="js/app.js" defer></script>
+</body>
+</html>
