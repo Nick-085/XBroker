@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>XBroker - Desktop Environments</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=3">
 </head>
 <body>
   <div class="animated-gradient" aria-hidden="true"></div>
@@ -14,9 +14,10 @@
       <div class="brand">Welcome <span id="user-name">Guest</span></div>
       <nav class="links">
         <button class="link" data-route="home">Home</button>
-        <button class="link" data-route="browse">Browse</button>
         <button class="link" data-route="faq">FAQ</button>
         <button class="link" data-route="users">Users</button>
+        <button class="link" data-route="vdi-configs">VDI Configs</button>
+        <button class="link" data-route="profile">Profile</button>
         <a href="https://github.com/Nick-085/XBroker" target="_blank" rel="noopener" class="link">IT Support</a>
         <button id="logout-btn" class="link">Logout</button>
       </nav>
@@ -31,16 +32,17 @@
 
     <!-- Login Modal -->
   <div id="login-modal" class="modal show">
-    <div class="modal-panel">
-      <h2>Sign in</h2>
-      <p class="muted">Enter your credentials</p>
-      <input id="username-input" type="text" placeholder="Username" required />
-      <input id="password-input" type="password" placeholder="Password" required />
-      <div id="login-error" class="error hidden"></div>
-      <div class="modal-actions">
-        <button id="login-btn" class="btn primary">Sign in</button>
+    <div class="modal-content auth-modal">
+      <h2>Sign In</h2>
+      <div class="auth-content">
+        <div class="verification-form" style="margin-top: 0;">
+          <input type="text" id="username-input" class="form-input" placeholder="Username" required />
+          <input type="password" id="password-input" class="form-input" placeholder="Password" required />
+          <button id="login-btn" class="btn primary">Sign In</button>
+          <div id="login-error" class="error hidden"></div>
+        </div>
       </div>
     </div>
-  </div>  <script src="js/app.js" defer></script>
+  </div>  <script src="js/app.js?v=9" defer></script>
 </body>
 </html>

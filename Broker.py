@@ -111,10 +111,11 @@ if sessionIP is None:
 sessionIP = sessionIP.group(1)
 print(sessionIP)
 
-# User and pass in JSON for payload
+# Use the user's credentials to authenticate with Guacamole
+# This way the connection will be created under their account
 auth_payload = {
     "username": rUser,
-    "password": rPass 
+    "password": rPass
 }
 
 # Login to guac and get token
@@ -148,6 +149,10 @@ response = requests.post(api_url, json=vdiConfig, headers=headers, verify=False)
 if response.status_code == 200:
     connection_data = response.json()
     connection_id = connection_data.get('identifier')
+    
+    # Connection is automatically added to the user's account since we authenticated as the user
+    print(f"Successfully created connection {connection_id} under user {rUser}'s account")
+    
     # Include all components needed for URL construction
     print(json.dumps({
         "status": "success",
