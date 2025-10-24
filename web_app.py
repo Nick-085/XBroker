@@ -6,6 +6,7 @@ import os
 from functools import wraps
 from users import UserManager
 from tls_config import configure_reverse_proxy_headers, ReverseProxyHeaders, TLSConfig
+from shutdown_handler import initialize_shutdown_handler, register_cleanup
 import logging
 
 app = Flask(__name__)
@@ -19,6 +20,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Initialize graceful shutdown handler
+shutdown_handler = initialize_shutdown_handler(app)
+logger.info("Graceful shutdown handler initialized")
+
 # Initialize TLS configuration
 tls_config = TLSConfig()
 
@@ -26,6 +31,14 @@ tls_config = TLSConfig()
 if tls_config.reverse_proxy_enabled:
     configure_reverse_proxy_headers(app)
     logger.info("Reverse proxy header handling enabled")
+
+# Middleware to prevent new requests during shutdown
+@app.before_request
+def check_shutdown_status():
+    """Reject new requests if shutdown is in progress."""
+    if os.getenv("XBROKER_SHUTTING_DOWN") == "1":
+        logger.warning(f"Rejecting request during shutdown: {request.method} {request.path}")
+        return {"error": "Server is shutting down"}, 503
 
 # Security headers middleware
 @app.after_request
