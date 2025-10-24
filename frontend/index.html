@@ -13,13 +13,13 @@
     <aside class="sidebar">
       <div class="brand">Welcome <span id="user-name">Guest</span></div>
       <nav class="links">
-        <button class="link" data-route="home">Home</button>
-        <button class="link" data-route="faq">FAQ</button>
-        <button class="link" data-route="users">Users</button>
-        <button class="link" data-route="vdi-configs">VDI Configs</button>
-        <button class="link" data-route="profile">Profile</button>
-        <a href="https://github.com/Nick-085/XBroker" target="_blank" rel="noopener" class="link">IT Support</a>
-        <button id="logout-btn" class="link">Logout</button>
+        <button class="link" data-route="home" data-i18n="nav.home">Home</button>
+        <button class="link" data-route="faq" data-i18n="nav.faq">FAQ</button>
+        <button class="link" data-route="users" data-i18n="nav.users">Users</button>
+        <button class="link" data-route="vdi-configs" data-i18n="nav.vdi_configs">VDI Configs</button>
+        <button class="link" data-route="profile" data-i18n="nav.profile">Profile</button>
+        <a href="https://github.com/Nick-085/XBroker" target="_blank" rel="noopener" class="link" data-i18n="nav.support">IT Support</a>
+        <button id="logout-btn" class="link" data-i18n="nav.logout">Logout</button>
       </nav>
     </aside>
 
@@ -33,16 +33,17 @@
     <!-- Login Modal -->
   <div id="login-modal" class="modal show">
     <div class="modal-content auth-modal">
-      <h2>Sign In</h2>
+      <h2 data-i18n="login.title">Sign In</h2>
       <div class="auth-content">
         <div class="verification-form" style="margin-top: 0;">
-          <input type="text" id="username-input" class="form-input" placeholder="Username" required />
-          <input type="password" id="password-input" class="form-input" placeholder="Password" required />
-          <button id="login-btn" class="btn primary">Sign In</button>
+          <input type="text" id="username-input" class="form-input" placeholder="Username" data-i18n="login.username" required />
+          <input type="password" id="password-input" class="form-input" placeholder="Password" data-i18n="login.password" required />
+          <button id="login-btn" class="btn primary" data-i18n="login.sign_in">Sign In</button>
           <div id="login-error" class="error hidden"></div>
         </div>
       </div>
     </div>
-  </div>  <script src="js/app.js?v=9" defer></script>
+  </div>  <script src="js/i18n.js" defer></script>
+  <script src="js/app.js?v=9" defer></script>
 </body>
 </html>

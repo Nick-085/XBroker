@@ -732,8 +732,8 @@
     if (!state.token || !state.user) {
       content.innerHTML = `
         <div>
-          <h1 class="h1">Unauthorized</h1>
-          <p class="muted">You need to be logged in to view this page.</p>
+          <h1 class="h1" data-i18n="errors.unauthorized">Unauthorized</h1>
+          <p class="muted" data-i18n="profile.title">You need to be logged in to view this page.</p>
         </div>
       `;
       return;
@@ -746,30 +746,65 @@
       3: 'Global Admin'
     };
 
+    // Get current language for the selector
+    const currentLang = i18n.getCurrentLanguage();
+    const languages = i18n.getSupportedLanguages();
+    const langOptions = Object.entries(languages)
+      .map(([code, name]) => `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${name}</option>`)
+      .join('');
+
     content.innerHTML = `
       <div>
-        <h1 class="h1">User Profile</h1>
+        <h1 class="h1" data-i18n="profile.title">User Profile</h1>
         
         <div class="profile-info">
-          <h2>Account Information</h2>
-          <p><strong>Username:</strong> ${state.user.username}</p>
-          <p><strong>Admin Level:</strong> ${levelNames[state.user.adminLevel] || 'Unknown'}</p>
+          <h2 data-i18n="profile.title">Account Information</h2>
+          <p><strong data-i18n="profile.username">Username:</strong> ${state.user.username}</p>
+          <p><strong data-i18n="users.admin_level">Admin Level:</strong> ${levelNames[state.user.adminLevel] || 'Unknown'}</p>
+        </div>
+
+        <div class="profile-section">
+          <h2 data-i18n="profile.language">Language Preferences</h2>
+          <div class="language-selector">
+            <label for="lang-select" data-i18n="profile.language">Language:</label>
+            <select id="lang-select" class="form-input">
+              ${langOptions}
+            </select>
+          </div>
+          <p class="success hidden" id="language-changed" data-i18n="common.success">Language changed successfully</p>
         </div>
         
         <div class="profile-form">
-          <h2>Change Password</h2>
-          <input type="password" id="current-password" class="form-input" placeholder="Current Password" />
-          <input type="password" id="new-password" class="form-input" placeholder="New Password" />
-          <input type="password" id="confirm-password" class="form-input" placeholder="Confirm Password" />
+          <h2 data-i18n="profile.change_password">Change Password</h2>
+          <input type="password" id="current-password" class="form-input" placeholder="Current Password" data-i18n="profile.current_password" />
+          <input type="password" id="new-password" class="form-input" placeholder="New Password" data-i18n="profile.new_password" />
+          <input type="password" id="confirm-password" class="form-input" placeholder="Confirm Password" data-i18n="profile.confirm_password" />
           <div id="password-error" class="error hidden"></div>
-          <button id="change-password-btn" class="btn primary">Change Password</button>
+          <button id="change-password-btn" class="btn primary" data-i18n="profile.change_password">Change Password</button>
           <div id="password-success" class="success hidden"></div>
         </div>
       </div>
     `;
 
+    // Attach language change event listener
+    document.getElementById('lang-select').addEventListener('change', (e) => {
+      i18n.setLanguage(e.target.value);
+      // Show success message
+      const successMsg = document.getElementById('language-changed');
+      if (successMsg) {
+        successMsg.textContent = i18n.t('common.success');
+        successMsg.classList.remove('hidden');
+        setTimeout(() => successMsg.classList.add('hidden'), 3000);
+      }
+    });
+
     // Attach change password event listener
     document.getElementById('change-password-btn').addEventListener('click', handleChangePassword);
+
+    // Translate page after rendering
+    window.addEventListener('pageTranslated', () => {
+      i18n.translatePage();
+    });
   }
 
   function handleChangePassword() {

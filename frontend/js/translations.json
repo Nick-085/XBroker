@@ -1,0 +1,954 @@
+{
+  "en": {
+    "app": {
+      "title": "XBroker - Desktop Environments",
+      "welcome": "Welcome"
+    },
+    "nav": {
+      "home": "Home",
+      "faq": "FAQ",
+      "users": "Users",
+      "vdi_configs": "VDI Configs",
+      "profile": "Profile",
+      "support": "IT Support",
+      "logout": "Logout"
+    },
+    "login": {
+      "title": "Sign In",
+      "username": "Username",
+      "password": "Password",
+      "sign_in": "Sign In",
+      "error": "Login failed",
+      "invalid_credentials": "Invalid credentials",
+      "account_locked": "This account has been locked",
+      "session_expired": "Your session has expired. Please sign in again."
+    },
+    "twofa": {
+      "title": "Two-Factor Authentication",
+      "setup_title": "Set Up Two-Factor Authentication",
+      "enter_code": "Enter the code from your authenticator app",
+      "scan_qr": "Scan the QR code with your authenticator app",
+      "enter_code_short": "Enter the code shown in your app",
+      "verify": "Verify Code",
+      "complete_setup": "Complete Setup",
+      "manual_setup": "Can't scan? Manual setup",
+      "manual_instructions": "Enter this code in your authenticator app:",
+      "copy": "Copy",
+      "error": "Invalid code. Please try again."
+    },
+    "home": {
+      "title": "Dashboard",
+      "welcome_message": "Welcome to XBroker",
+      "active_vdis": "Active VDIs",
+      "launch_vdi": "Launch VDI",
+      "no_active_vdis": "No active VDIs"
+    },
+    "vdi": {
+      "title": "Virtual Desktops",
+      "available_profiles": "Available Desktop Environments",
+      "launch": "Launch",
+      "launching": "Launching...",
+      "connection_id": "Connection ID",
+      "status": "Status",
+      "protocol": "Protocol",
+      "launch_success": "Desktop launched successfully",
+      "launch_error": "Failed to launch desktop",
+      "loading": "Loading desktop environments..."
+    },
+    "users": {
+      "title": "User Management",
+      "username": "Username",
+      "admin_level": "Admin Level",
+      "admin_levels": {
+        "0": "User",
+        "1": "User Admin",
+        "2": "VDI Admin",
+        "3": "Global Admin"
+      },
+      "create": "Create User",
+      "delete": "Delete",
+      "edit": "Edit",
+      "password": "Password",
+      "confirm_delete": "Are you sure you want to delete this user?",
+      "delete_success": "User deleted successfully",
+      "create_success": "User created successfully",
+      "create_error": "Failed to create user",
+      "delete_error": "Failed to delete user",
+      "missing_fields": "Please fill in all required fields",
+      "no_users": "No users found",
+      "search": "Search users",
+      "loading": "Loading users..."
+    },
+    "profile": {
+      "title": "Profile",
+      "username": "Username",
+      "change_password": "Change Password",
+      "current_password": "Current Password",
+      "new_password": "New Password",
+      "confirm_password": "Confirm Password",
+      "save": "Save",
+      "cancel": "Cancel",
+      "language": "Language",
+      "password_changed": "Password changed successfully",
+      "password_error": "Failed to change password",
+      "passwords_not_match": "Passwords do not match",
+      "password_too_short": "Password must be at least 8 characters",
+      "enable_2fa": "Enable Two-Factor Authentication",
+      "disable_2fa": "Disable Two-Factor Authentication"
+    },
+    "faq": {
+      "title": "FAQ",
+      "no_items": "No FAQ items available"
+    },
+    "vdi_configs": {
+      "title": "VDI Configurations",
+      "no_profiles": "No VDI profiles available"
+    },
+    "errors": {
+      "network": "Network error. Please check your connection.",
+      "server": "Server error. Please try again later.",
+      "unauthorized": "Unauthorized access",
+      "forbidden": "Access denied",
+      "not_found": "Resource not found",
+      "validation": "Please check your input and try again",
+      "rate_limit": "Too many requests. Please try again later.",
+      "unknown": "An error occurred. Please try again."
+    },
+    "common": {
+      "loading": "Loading...",
+      "saving": "Saving...",
+      "error": "Error",
+      "success": "Success",
+      "warning": "Warning",
+      "info": "Information",
+      "close": "Close",
+      "ok": "OK",
+      "cancel": "Cancel",
+      "yes": "Yes",
+      "no": "No",
+      "search": "Search",
+      "filter": "Filter",
+      "sort": "Sort",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "total": "Total"
+    }
+  },
+  "es": {
+    "app": {
+      "title": "XBroker - Entornos de Escritorio",
+      "welcome": "Bienvenido"
+    },
+    "nav": {
+      "home": "Inicio",
+      "faq": "Preguntas Frecuentes",
+      "users": "Usuarios",
+      "vdi_configs": "Configuraciones de VDI",
+      "profile": "Perfil",
+      "support": "Soporte de TI",
+      "logout": "Cerrar Sesión"
+    },
+    "login": {
+      "title": "Iniciar Sesión",
+      "username": "Nombre de Usuario",
+      "password": "Contraseña",
+      "sign_in": "Iniciar Sesión",
+      "error": "Error al iniciar sesión",
+      "invalid_credentials": "Credenciales inválidas",
+      "account_locked": "Esta cuenta ha sido bloqueada",
+      "session_expired": "Su sesión ha expirado. Por favor, inicie sesión de nuevo."
+    },
+    "twofa": {
+      "title": "Autenticación de Dos Factores",
+      "setup_title": "Configurar Autenticación de Dos Factores",
+      "enter_code": "Ingrese el código de su aplicación de autenticación",
+      "scan_qr": "Escanee el código QR con su aplicación de autenticación",
+      "enter_code_short": "Ingrese el código que se muestra en su aplicación",
+      "verify": "Verificar Código",
+      "complete_setup": "Completar Configuración",
+      "manual_setup": "¿No puede escanear? Configuración manual",
+      "manual_instructions": "Ingrese este código en su aplicación de autenticación:",
+      "copy": "Copiar",
+      "error": "Código inválido. Por favor, inténtelo de nuevo."
+    },
+    "home": {
+      "title": "Panel de Control",
+      "welcome_message": "Bienvenido a XBroker",
+      "active_vdis": "VDIs Activos",
+      "launch_vdi": "Lanzar VDI",
+      "no_active_vdis": "Sin VDIs activos"
+    },
+    "vdi": {
+      "title": "Escritorios Virtuales",
+      "available_profiles": "Entornos de Escritorio Disponibles",
+      "launch": "Lanzar",
+      "launching": "Lanzando...",
+      "connection_id": "ID de Conexión",
+      "status": "Estado",
+      "protocol": "Protocolo",
+      "launch_success": "Escritorio lanzado exitosamente",
+      "launch_error": "Error al lanzar el escritorio",
+      "loading": "Cargando entornos de escritorio..."
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "username": "Nombre de Usuario",
+      "admin_level": "Nivel de Admin",
+      "admin_levels": {
+        "0": "Usuario",
+        "1": "Admin de Usuarios",
+        "2": "Admin de VDI",
+        "3": "Admin Global"
+      },
+      "create": "Crear Usuario",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "password": "Contraseña",
+      "confirm_delete": "¿Está seguro de que desea eliminar este usuario?",
+      "delete_success": "Usuario eliminado exitosamente",
+      "create_success": "Usuario creado exitosamente",
+      "create_error": "Error al crear usuario",
+      "delete_error": "Error al eliminar usuario",
+      "missing_fields": "Por favor, complete todos los campos requeridos",
+      "no_users": "No se encontraron usuarios",
+      "search": "Buscar usuarios",
+      "loading": "Cargando usuarios..."
+    },
+    "profile": {
+      "title": "Perfil",
+      "username": "Nombre de Usuario",
+      "change_password": "Cambiar Contraseña",
+      "current_password": "Contraseña Actual",
+      "new_password": "Nueva Contraseña",
+      "confirm_password": "Confirmar Contraseña",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "language": "Idioma",
+      "password_changed": "Contraseña cambiada exitosamente",
+      "password_error": "Error al cambiar la contraseña",
+      "passwords_not_match": "Las contraseñas no coinciden",
+      "password_too_short": "La contraseña debe tener al menos 8 caracteres",
+      "enable_2fa": "Habilitar Autenticación de Dos Factores",
+      "disable_2fa": "Deshabilitar Autenticación de Dos Factores"
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "no_items": "No hay elementos de Preguntas Frecuentes disponibles"
+    },
+    "vdi_configs": {
+      "title": "Configuraciones de VDI",
+      "no_profiles": "No hay perfiles de VDI disponibles"
+    },
+    "errors": {
+      "network": "Error de red. Por favor, verifique su conexión.",
+      "server": "Error del servidor. Por favor, inténtelo más tarde.",
+      "unauthorized": "Acceso no autorizado",
+      "forbidden": "Acceso denegado",
+      "not_found": "Recurso no encontrado",
+      "validation": "Por favor, verifique su entrada e inténtelo de nuevo",
+      "rate_limit": "Demasiadas solicitudes. Por favor, inténtelo más tarde.",
+      "unknown": "Ocurrió un error. Por favor, inténtelo de nuevo."
+    },
+    "common": {
+      "loading": "Cargando...",
+      "saving": "Guardando...",
+      "error": "Error",
+      "success": "Éxito",
+      "warning": "Advertencia",
+      "info": "Información",
+      "close": "Cerrar",
+      "ok": "Aceptar",
+      "cancel": "Cancelar",
+      "yes": "Sí",
+      "no": "No",
+      "search": "Buscar",
+      "filter": "Filtrar",
+      "sort": "Ordenar",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "total": "Total"
+    }
+  },
+  "fr": {
+    "app": {
+      "title": "XBroker - Environnements de Bureau",
+      "welcome": "Bienvenue"
+    },
+    "nav": {
+      "home": "Accueil",
+      "faq": "FAQ",
+      "users": "Utilisateurs",
+      "vdi_configs": "Configurations VDI",
+      "profile": "Profil",
+      "support": "Support IT",
+      "logout": "Déconnexion"
+    },
+    "login": {
+      "title": "Se Connecter",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "sign_in": "Se Connecter",
+      "error": "Erreur de connexion",
+      "invalid_credentials": "Identifiants invalides",
+      "account_locked": "Ce compte a été verrouillé",
+      "session_expired": "Votre session a expiré. Veuillez vous reconnecter."
+    },
+    "twofa": {
+      "title": "Authentification Deux Facteurs",
+      "setup_title": "Configurer l'Authentification Deux Facteurs",
+      "enter_code": "Entrez le code de votre application d'authentification",
+      "scan_qr": "Scannez le code QR avec votre application d'authentification",
+      "enter_code_short": "Entrez le code affiché dans votre application",
+      "verify": "Vérifier le Code",
+      "complete_setup": "Terminer la Configuration",
+      "manual_setup": "Impossible de scanner? Configuration manuelle",
+      "manual_instructions": "Entrez ce code dans votre application d'authentification:",
+      "copy": "Copier",
+      "error": "Code invalide. Veuillez réessayer."
+    },
+    "home": {
+      "title": "Tableau de Bord",
+      "welcome_message": "Bienvenue dans XBroker",
+      "active_vdis": "VDIs Actifs",
+      "launch_vdi": "Lancer VDI",
+      "no_active_vdis": "Aucun VDI actif"
+    },
+    "vdi": {
+      "title": "Bureaux Virtuels",
+      "available_profiles": "Environnements de Bureau Disponibles",
+      "launch": "Lancer",
+      "launching": "Lancement en cours...",
+      "connection_id": "ID de Connexion",
+      "status": "Statut",
+      "protocol": "Protocole",
+      "launch_success": "Bureau lancé avec succès",
+      "launch_error": "Erreur lors du lancement du bureau",
+      "loading": "Chargement des environnements de bureau..."
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "username": "Nom d'utilisateur",
+      "admin_level": "Niveau Admin",
+      "admin_levels": {
+        "0": "Utilisateur",
+        "1": "Admin Utilisateurs",
+        "2": "Admin VDI",
+        "3": "Admin Global"
+      },
+      "create": "Créer Utilisateur",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "password": "Mot de passe",
+      "confirm_delete": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
+      "delete_success": "Utilisateur supprimé avec succès",
+      "create_success": "Utilisateur créé avec succès",
+      "create_error": "Erreur lors de la création de l'utilisateur",
+      "delete_error": "Erreur lors de la suppression de l'utilisateur",
+      "missing_fields": "Veuillez remplir tous les champs requis",
+      "no_users": "Aucun utilisateur trouvé",
+      "search": "Rechercher des utilisateurs",
+      "loading": "Chargement des utilisateurs..."
+    },
+    "profile": {
+      "title": "Profil",
+      "username": "Nom d'utilisateur",
+      "change_password": "Changer le Mot de Passe",
+      "current_password": "Mot de Passe Actuel",
+      "new_password": "Nouveau Mot de Passe",
+      "confirm_password": "Confirmer le Mot de Passe",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "language": "Langue",
+      "password_changed": "Mot de passe changé avec succès",
+      "password_error": "Erreur lors du changement du mot de passe",
+      "passwords_not_match": "Les mots de passe ne correspondent pas",
+      "password_too_short": "Le mot de passe doit contenir au moins 8 caractères",
+      "enable_2fa": "Activer l'Authentification Deux Facteurs",
+      "disable_2fa": "Désactiver l'Authentification Deux Facteurs"
+    },
+    "faq": {
+      "title": "FAQ",
+      "no_items": "Aucun élément FAQ disponible"
+    },
+    "vdi_configs": {
+      "title": "Configurations VDI",
+      "no_profiles": "Aucun profil VDI disponible"
+    },
+    "errors": {
+      "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+      "server": "Erreur serveur. Veuillez réessayer plus tard.",
+      "unauthorized": "Accès non autorisé",
+      "forbidden": "Accès refusé",
+      "not_found": "Ressource non trouvée",
+      "validation": "Veuillez vérifier votre saisie et réessayer",
+      "rate_limit": "Trop de demandes. Veuillez réessayer plus tard.",
+      "unknown": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "common": {
+      "loading": "Chargement...",
+      "saving": "Enregistrement...",
+      "error": "Erreur",
+      "success": "Succès",
+      "warning": "Avertissement",
+      "info": "Information",
+      "close": "Fermer",
+      "ok": "OK",
+      "cancel": "Annuler",
+      "yes": "Oui",
+      "no": "Non",
+      "search": "Rechercher",
+      "filter": "Filtrer",
+      "sort": "Trier",
+      "back": "Retour",
+      "next": "Suivant",
+      "previous": "Précédent",
+      "total": "Total"
+    }
+  },
+  "de": {
+    "app": {
+      "title": "XBroker - Desktop-Umgebungen",
+      "welcome": "Willkommen"
+    },
+    "nav": {
+      "home": "Startseite",
+      "faq": "Häufig Gestellte Fragen",
+      "users": "Benutzer",
+      "vdi_configs": "VDI-Konfigurationen",
+      "profile": "Profil",
+      "support": "IT-Support",
+      "logout": "Abmelden"
+    },
+    "login": {
+      "title": "Anmelden",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "sign_in": "Anmelden",
+      "error": "Anmeldefehler",
+      "invalid_credentials": "Ungültige Anmeldeinformationen",
+      "account_locked": "Dieses Konto wurde gesperrt",
+      "session_expired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+    },
+    "twofa": {
+      "title": "Zwei-Faktor-Authentifizierung",
+      "setup_title": "Zwei-Faktor-Authentifizierung einrichten",
+      "enter_code": "Geben Sie den Code aus Ihrer Authentifizierungs-App ein",
+      "scan_qr": "Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App",
+      "enter_code_short": "Geben Sie den in Ihrer App angezeigten Code ein",
+      "verify": "Code Überprüfen",
+      "complete_setup": "Setup Abschließen",
+      "manual_setup": "Kann nicht scannen? Manuelle Einrichtung",
+      "manual_instructions": "Geben Sie diesen Code in Ihrer Authentifizierungs-App ein:",
+      "copy": "Kopieren",
+      "error": "Ungültiger Code. Bitte versuchen Sie es erneut."
+    },
+    "home": {
+      "title": "Dashboard",
+      "welcome_message": "Willkommen bei XBroker",
+      "active_vdis": "Aktive VDIs",
+      "launch_vdi": "VDI Starten",
+      "no_active_vdis": "Keine aktiven VDIs"
+    },
+    "vdi": {
+      "title": "Virtuelle Desktops",
+      "available_profiles": "Verfügbare Desktop-Umgebungen",
+      "launch": "Starten",
+      "launching": "Wird gestartet...",
+      "connection_id": "Verbindungs-ID",
+      "status": "Status",
+      "protocol": "Protokoll",
+      "launch_success": "Desktop erfolgreich gestartet",
+      "launch_error": "Fehler beim Starten des Desktops",
+      "loading": "Laden von Desktop-Umgebungen..."
+    },
+    "users": {
+      "title": "Benutzerverwaltung",
+      "username": "Benutzername",
+      "admin_level": "Admin-Ebene",
+      "admin_levels": {
+        "0": "Benutzer",
+        "1": "Benutzer-Admin",
+        "2": "VDI-Admin",
+        "3": "Globaler Admin"
+      },
+      "create": "Benutzer Erstellen",
+      "delete": "Löschen",
+      "edit": "Bearbeiten",
+      "password": "Passwort",
+      "confirm_delete": "Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?",
+      "delete_success": "Benutzer erfolgreich gelöscht",
+      "create_success": "Benutzer erfolgreich erstellt",
+      "create_error": "Fehler beim Erstellen des Benutzers",
+      "delete_error": "Fehler beim Löschen des Benutzers",
+      "missing_fields": "Bitte füllen Sie alle erforderlichen Felder aus",
+      "no_users": "Keine Benutzer gefunden",
+      "search": "Benutzer suchen",
+      "loading": "Benutzer werden geladen..."
+    },
+    "profile": {
+      "title": "Profil",
+      "username": "Benutzername",
+      "change_password": "Passwort Ändern",
+      "current_password": "Aktuelles Passwort",
+      "new_password": "Neues Passwort",
+      "confirm_password": "Passwort Bestätigen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "language": "Sprache",
+      "password_changed": "Passwort erfolgreich geändert",
+      "password_error": "Fehler beim Ändern des Passworts",
+      "passwords_not_match": "Passwörter stimmen nicht überein",
+      "password_too_short": "Passwort muss mindestens 8 Zeichen lang sein",
+      "enable_2fa": "Zwei-Faktor-Authentifizierung Aktivieren",
+      "disable_2fa": "Zwei-Faktor-Authentifizierung Deaktivieren"
+    },
+    "faq": {
+      "title": "Häufig Gestellte Fragen",
+      "no_items": "Keine FAQ-Elemente verfügbar"
+    },
+    "vdi_configs": {
+      "title": "VDI-Konfigurationen",
+      "no_profiles": "Keine VDI-Profile verfügbar"
+    },
+    "errors": {
+      "network": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung.",
+      "server": "Serverfehler. Bitte versuchen Sie es später erneut.",
+      "unauthorized": "Zugriff nicht autorisiert",
+      "forbidden": "Zugriff verweigert",
+      "not_found": "Ressource nicht gefunden",
+      "validation": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut",
+      "rate_limit": "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",
+      "unknown": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "common": {
+      "loading": "Wird geladen...",
+      "saving": "Wird gespeichert...",
+      "error": "Fehler",
+      "success": "Erfolg",
+      "warning": "Warnung",
+      "info": "Information",
+      "close": "Schließen",
+      "ok": "OK",
+      "cancel": "Abbrechen",
+      "yes": "Ja",
+      "no": "Nein",
+      "search": "Suchen",
+      "filter": "Filtern",
+      "sort": "Sortieren",
+      "back": "Zurück",
+      "next": "Weiter",
+      "previous": "Zurück",
+      "total": "Gesamt"
+    }
+  },
+  "pt": {
+    "app": {
+      "title": "XBroker - Ambientes de Desktop",
+      "welcome": "Bem-vindo"
+    },
+    "nav": {
+      "home": "Início",
+      "faq": "Perguntas Frequentes",
+      "users": "Usuários",
+      "vdi_configs": "Configurações VDI",
+      "profile": "Perfil",
+      "support": "Suporte de TI",
+      "logout": "Sair"
+    },
+    "login": {
+      "title": "Entrar",
+      "username": "Nome de Usuário",
+      "password": "Senha",
+      "sign_in": "Entrar",
+      "error": "Erro ao entrar",
+      "invalid_credentials": "Credenciais inválidas",
+      "account_locked": "Esta conta foi bloqueada",
+      "session_expired": "Sua sessão expirou. Faça login novamente."
+    },
+    "twofa": {
+      "title": "Autenticação de Dois Fatores",
+      "setup_title": "Configurar Autenticação de Dois Fatores",
+      "enter_code": "Digite o código do seu aplicativo de autenticação",
+      "scan_qr": "Escaneie o código QR com seu aplicativo de autenticação",
+      "enter_code_short": "Digite o código mostrado no seu aplicativo",
+      "verify": "Verificar Código",
+      "complete_setup": "Completar Configuração",
+      "manual_setup": "Não consegue escanear? Configuração manual",
+      "manual_instructions": "Digite este código em seu aplicativo de autenticação:",
+      "copy": "Copiar",
+      "error": "Código inválido. Tente novamente."
+    },
+    "home": {
+      "title": "Painel de Controle",
+      "welcome_message": "Bem-vindo ao XBroker",
+      "active_vdis": "VDIs Ativos",
+      "launch_vdi": "Iniciar VDI",
+      "no_active_vdis": "Nenhum VDI ativo"
+    },
+    "vdi": {
+      "title": "Desktops Virtuais",
+      "available_profiles": "Ambientes de Desktop Disponíveis",
+      "launch": "Iniciar",
+      "launching": "Iniciando...",
+      "connection_id": "ID de Conexão",
+      "status": "Status",
+      "protocol": "Protocolo",
+      "launch_success": "Desktop iniciado com sucesso",
+      "launch_error": "Erro ao iniciar o desktop",
+      "loading": "Carregando ambientes de desktop..."
+    },
+    "users": {
+      "title": "Gerenciamento de Usuários",
+      "username": "Nome de Usuário",
+      "admin_level": "Nível de Admin",
+      "admin_levels": {
+        "0": "Usuário",
+        "1": "Admin de Usuários",
+        "2": "Admin de VDI",
+        "3": "Admin Global"
+      },
+      "create": "Criar Usuário",
+      "delete": "Excluir",
+      "edit": "Editar",
+      "password": "Senha",
+      "confirm_delete": "Tem certeza de que deseja excluir este usuário?",
+      "delete_success": "Usuário excluído com sucesso",
+      "create_success": "Usuário criado com sucesso",
+      "create_error": "Erro ao criar usuário",
+      "delete_error": "Erro ao excluir usuário",
+      "missing_fields": "Por favor, preencha todos os campos obrigatórios",
+      "no_users": "Nenhum usuário encontrado",
+      "search": "Pesquisar usuários",
+      "loading": "Carregando usuários..."
+    },
+    "profile": {
+      "title": "Perfil",
+      "username": "Nome de Usuário",
+      "change_password": "Alterar Senha",
+      "current_password": "Senha Atual",
+      "new_password": "Nova Senha",
+      "confirm_password": "Confirmar Senha",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "language": "Idioma",
+      "password_changed": "Senha alterada com sucesso",
+      "password_error": "Erro ao alterar a senha",
+      "passwords_not_match": "As senhas não correspondem",
+      "password_too_short": "A senha deve ter pelo menos 8 caracteres",
+      "enable_2fa": "Ativar Autenticação de Dois Fatores",
+      "disable_2fa": "Desativar Autenticação de Dois Fatores"
+    },
+    "faq": {
+      "title": "Perguntas Frequentes",
+      "no_items": "Nenhum item de perguntas frequentes disponível"
+    },
+    "vdi_configs": {
+      "title": "Configurações VDI",
+      "no_profiles": "Nenhum perfil VDI disponível"
+    },
+    "errors": {
+      "network": "Erro de rede. Por favor, verifique sua conexão.",
+      "server": "Erro no servidor. Por favor, tente mais tarde.",
+      "unauthorized": "Acesso não autorizado",
+      "forbidden": "Acesso negado",
+      "not_found": "Recurso não encontrado",
+      "validation": "Por favor, verifique sua entrada e tente novamente",
+      "rate_limit": "Muitas solicitações. Por favor, tente mais tarde.",
+      "unknown": "Ocorreu um erro. Por favor, tente novamente."
+    },
+    "common": {
+      "loading": "Carregando...",
+      "saving": "Salvando...",
+      "error": "Erro",
+      "success": "Sucesso",
+      "warning": "Aviso",
+      "info": "Informação",
+      "close": "Fechar",
+      "ok": "OK",
+      "cancel": "Cancelar",
+      "yes": "Sim",
+      "no": "Não",
+      "search": "Pesquisar",
+      "filter": "Filtrar",
+      "sort": "Classificar",
+      "back": "Voltar",
+      "next": "Próximo",
+      "previous": "Anterior",
+      "total": "Total"
+    }
+  },
+  "ja": {
+    "app": {
+      "title": "XBroker - デスクトップ環境",
+      "welcome": "ようこそ"
+    },
+    "nav": {
+      "home": "ホーム",
+      "faq": "よくある質問",
+      "users": "ユーザー",
+      "vdi_configs": "VDI設定",
+      "profile": "プロファイル",
+      "support": "ITサポート",
+      "logout": "ログアウト"
+    },
+    "login": {
+      "title": "サインイン",
+      "username": "ユーザー名",
+      "password": "パスワード",
+      "sign_in": "サインイン",
+      "error": "ログインエラー",
+      "invalid_credentials": "無効な認証情報です",
+      "account_locked": "このアカウントはロックされています",
+      "session_expired": "セッションの有効期限が切れました。もう一度サインインしてください。"
+    },
+    "twofa": {
+      "title": "2要素認証",
+      "setup_title": "2要素認証をセットアップ",
+      "enter_code": "認証アプリからのコードを入力してください",
+      "scan_qr": "認証アプリでQRコードをスキャンしてください",
+      "enter_code_short": "アプリに表示されるコードを入力してください",
+      "verify": "コードを確認",
+      "complete_setup": "セットアップを完了",
+      "manual_setup": "スキャンできない?手動セットアップ",
+      "manual_instructions": "このコードを認証アプリに入力してください:",
+      "copy": "コピー",
+      "error": "無効なコード。もう一度お試しください。"
+    },
+    "home": {
+      "title": "ダッシュボード",
+      "welcome_message": "XBrokerへようこそ",
+      "active_vdis": "アクティブなVDI",
+      "launch_vdi": "VDIを起動",
+      "no_active_vdis": "アクティブなVDIはありません"
+    },
+    "vdi": {
+      "title": "仮想デスクトップ",
+      "available_profiles": "利用可能なデスクトップ環境",
+      "launch": "起動",
+      "launching": "起動中...",
+      "connection_id": "接続ID",
+      "status": "ステータス",
+      "protocol": "プロトコル",
+      "launch_success": "デスクトップが正常に起動されました",
+      "launch_error": "デスクトップの起動に失敗しました",
+      "loading": "デスクトップ環境を読み込んでいます..."
+    },
+    "users": {
+      "title": "ユーザー管理",
+      "username": "ユーザー名",
+      "admin_level": "管理者レベル",
+      "admin_levels": {
+        "0": "ユーザー",
+        "1": "ユーザー管理者",
+        "2": "VDI管理者",
+        "3": "グローバル管理者"
+      },
+      "create": "ユーザーを作成",
+      "delete": "削除",
+      "edit": "編集",
+      "password": "パスワード",
+      "confirm_delete": "このユーザーを削除してもよろしいですか?",
+      "delete_success": "ユーザーが正常に削除されました",
+      "create_success": "ユーザーが正常に作成されました",
+      "create_error": "ユーザーの作成に失敗しました",
+      "delete_error": "ユーザーの削除に失敗しました",
+      "missing_fields": "すべての必須フィールドに入力してください",
+      "no_users": "ユーザーが見つかりません",
+      "search": "ユーザーを検索",
+      "loading": "ユーザーを読み込んでいます..."
+    },
+    "profile": {
+      "title": "プロファイル",
+      "username": "ユーザー名",
+      "change_password": "パスワードを変更",
+      "current_password": "現在のパスワード",
+      "new_password": "新しいパスワード",
+      "confirm_password": "パスワードを確認",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "language": "言語",
+      "password_changed": "パスワードが正常に変更されました",
+      "password_error": "パスワードの変更に失敗しました",
+      "passwords_not_match": "パスワードが一致しません",
+      "password_too_short": "パスワードは8文字以上にしてください",
+      "enable_2fa": "2要素認証を有効にする",
+      "disable_2fa": "2要素認証を無効にする"
+    },
+    "faq": {
+      "title": "よくある質問",
+      "no_items": "利用可能なFAQアイテムはありません"
+    },
+    "vdi_configs": {
+      "title": "VDI設定",
+      "no_profiles": "利用可能なVDIプロファイルはありません"
+    },
+    "errors": {
+      "network": "ネットワークエラー。接続を確認してください。",
+      "server": "サーバーエラー。後でもう一度お試しください。",
+      "unauthorized": "認可されていないアクセス",
+      "forbidden": "アクセスが拒否されました",
+      "not_found": "リソースが見つかりません",
+      "validation": "入力を確認してもう一度お試しください",
+      "rate_limit": "リクエストが多すぎます。後でもう一度お試しください。",
+      "unknown": "エラーが発生しました。もう一度お試しください。"
+    },
+    "common": {
+      "loading": "読み込み中...",
+      "saving": "保存中...",
+      "error": "エラー",
+      "success": "成功",
+      "warning": "警告",
+      "info": "情報",
+      "close": "閉じる",
+      "ok": "OK",
+      "cancel": "キャンセル",
+      "yes": "はい",
+      "no": "いいえ",
+      "search": "検索",
+      "filter": "フィルター",
+      "sort": "並べ替え",
+      "back": "戻る",
+      "next": "次へ",
+      "previous": "前へ",
+      "total": "合計"
+    }
+  },
+  "zh": {
+    "app": {
+      "title": "XBroker - 桌面环境",
+      "welcome": "欢迎"
+    },
+    "nav": {
+      "home": "主页",
+      "faq": "常见问题",
+      "users": "用户",
+      "vdi_configs": "VDI配置",
+      "profile": "个人资料",
+      "support": "IT支持",
+      "logout": "登出"
+    },
+    "login": {
+      "title": "登录",
+      "username": "用户名",
+      "password": "密码",
+      "sign_in": "登录",
+      "error": "登录失败",
+      "invalid_credentials": "无效的凭据",
+      "account_locked": "此账户已被锁定",
+      "session_expired": "您的会话已过期。请重新登录。"
+    },
+    "twofa": {
+      "title": "双因素认证",
+      "setup_title": "设置双因素认证",
+      "enter_code": "输入您的认证应用中的代码",
+      "scan_qr": "使用您的认证应用扫描二维码",
+      "enter_code_short": "输入应用中显示的代码",
+      "verify": "验证代码",
+      "complete_setup": "完成设置",
+      "manual_setup": "无法扫描?手动设置",
+      "manual_instructions": "在您的认证应用中输入此代码:",
+      "copy": "复制",
+      "error": "代码无效。请重试。"
+    },
+    "home": {
+      "title": "仪表板",
+      "welcome_message": "欢迎使用XBroker",
+      "active_vdis": "活跃VDI",
+      "launch_vdi": "启动VDI",
+      "no_active_vdis": "没有活跃的VDI"
+    },
+    "vdi": {
+      "title": "虚拟桌面",
+      "available_profiles": "可用的桌面环境",
+      "launch": "启动",
+      "launching": "启动中...",
+      "connection_id": "连接ID",
+      "status": "状态",
+      "protocol": "协议",
+      "launch_success": "桌面启动成功",
+      "launch_error": "桌面启动失败",
+      "loading": "正在加载桌面环境..."
+    },
+    "users": {
+      "title": "用户管理",
+      "username": "用户名",
+      "admin_level": "管理员级别",
+      "admin_levels": {
+        "0": "用户",
+        "1": "用户管理员",
+        "2": "VDI管理员",
+        "3": "全局管理员"
+      },
+      "create": "创建用户",
+      "delete": "删除",
+      "edit": "编辑",
+      "password": "密码",
+      "confirm_delete": "确定要删除此用户吗?",
+      "delete_success": "用户删除成功",
+      "create_success": "用户创建成功",
+      "create_error": "用户创建失败",
+      "delete_error": "用户删除失败",
+      "missing_fields": "请填写所有必需的字段",
+      "no_users": "未找到用户",
+      "search": "搜索用户",
+      "loading": "正在加载用户..."
+    },
+    "profile": {
+      "title": "个人资料",
+      "username": "用户名",
+      "change_password": "更改密码",
+      "current_password": "当前密码",
+      "new_password": "新密码",
+      "confirm_password": "确认密码",
+      "save": "保存",
+      "cancel": "取消",
+      "language": "语言",
+      "password_changed": "密码更改成功",
+      "password_error": "密码更改失败",
+      "passwords_not_match": "密码不匹配",
+      "password_too_short": "密码必须至少8个字符",
+      "enable_2fa": "启用双因素认证",
+      "disable_2fa": "禁用双因素认证"
+    },
+    "faq": {
+      "title": "常见问题",
+      "no_items": "没有可用的常见问题项"
+    },
+    "vdi_configs": {
+      "title": "VDI配置",
+      "no_profiles": "没有可用的VDI配置文件"
+    },
+    "errors": {
+      "network": "网络错误。请检查您的连接。",
+      "server": "服务器错误。请稍后重试。",
+      "unauthorized": "未授权的访问",
+      "forbidden": "访问被拒绝",
+      "not_found": "找不到资源",
+      "validation": "请检查您的输入并重试",
+      "rate_limit": "请求过于频繁。请稍后重试。",
+      "unknown": "发生了一个错误。请重试。"
+    },
+    "common": {
+      "loading": "加载中...",
+      "saving": "保存中...",
+      "error": "错误",
+      "success": "成功",
+      "warning": "警告",
+      "info": "信息",
+      "close": "关闭",
+      "ok": "确定",
+      "cancel": "取消",
+      "yes": "是",
+      "no": "否",
+      "search": "搜索",
+      "filter": "筛选",
+      "sort": "排序",
+      "back": "返回",
+      "next": "下一步",
+      "previous": "上一步",
+      "total": "总计"
+    }
+  }
+}

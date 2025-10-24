@@ -115,5 +115,4 @@ while True:
                 delete_vm(vm_uuid)
                 delete_guac_session(vm_name)
 
-    print(f"Sleeping for {cleanup_interval} minute(s) before next cleanup cycle.")
     time.sleep(cleanup_interval * 60)

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, send_file
+from flask import Flask, request, jsonify, send_from_directory, send_file, make_response
 from users import UserManager
 import os
 import json
@@ -7,6 +7,13 @@ import base64
 from collections import defaultdict
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
+import secrets
+from validators import (
+    ValidationError, validate_username, validate_password,
+    validate_filename, validate_json_data, sanitize_string,
+    validate_admin_level
+)
+from audit_logger import audit_logger
 
 app = Flask(__name__, static_folder='frontend')
 
@@ -14,35 +21,56 @@ app = Flask(__name__, static_folder='frontend')
 with open('config.json') as confFile:
     config = json.load(confFile)
 
+# Session security configuration
+app.config['SESSION_COOKIE_SECURE'] = os.getenv('SESSION_COOKIE_SECURE', 'True').lower() == 'true'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
+
 # Ensure all API routes are registered before static routes
 app.url_map.strict_slashes = False
 
-# Configure CORS and other headers
+# Configure CORS and other security headers
 @app.after_request
-def add_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+def add_security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
-    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
     response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    # CORS headers
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-CSRF-Token'
     return response
 
-# Initialize rate limiter and user manager
+# Enhanced rate limiter with per-user and per-IP tracking
 class RateLimiter:
-    def __init__(self, max_requests=30, time_window=60):
-        self.max_requests = max_requests
+    def __init__(self, max_requests=30, time_window=60, max_per_user=50):
+        self.max_requests = max_requests  # Per IP
+        self.max_per_user = max_per_user  # Per authenticated user
         self.time_window = time_window
-        self.requests = defaultdict(list)
+        self.ip_requests = defaultdict(list)
+        self.user_requests = defaultdict(list)
     
-    def is_allowed(self, ip):
+    def is_allowed(self, ip, username=None):
         now = time.time()
-        self.requests[ip] = [req_time for req_time in self.requests[ip] 
-                           if now - req_time <= self.time_window]
-        if len(self.requests[ip]) >= self.max_requests:
+        
+        # Check IP-based rate limit
+        self.ip_requests[ip] = [req_time for req_time in self.ip_requests[ip] 
+                               if now - req_time <= self.time_window]
+        if len(self.ip_requests[ip]) >= self.max_requests:
             return False
-        self.requests[ip].append(now)
+        self.ip_requests[ip].append(now)
+        
+        # Check per-user rate limit if authenticated
+        if username:
+            self.user_requests[username] = [req_time for req_time in self.user_requests[username] 
+                                           if now - req_time <= self.time_window]
+            if len(self.user_requests[username]) >= self.max_per_user:
+                return False
+            self.user_requests[username].append(now)
+        
         return True
 
 rate_limiter = RateLimiter()
@@ -56,7 +84,16 @@ def get_client_ip():
 
 @app.before_request
 def check_rate_limit():
-    if not rate_limiter.is_allowed(get_client_ip()):
+    ip = get_client_ip()
+    # Try to get username from session if available
+    username = None
+    if request.headers.get('Authorization'):
+        auth_header = request.headers.get('Authorization', '')
+        if auth_header.startswith('Bearer '):
+            token = auth_header[7:]
+            username = user_manager.validate_session(token)
+    
+    if not rate_limiter.is_allowed(ip, username):
         return jsonify({'error': 'Too many requests'}), 429
 
 # Special route for config.json
@@ -122,14 +159,27 @@ def validate_global_admin():
 @app.route('/api/login', methods=['POST'])
 def handle_login():
     try:
+        ip_address = request.remote_addr
         data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No JSON data provided'}), 400
+        
         username = data.get('username')
         password = data.get('password')
         totp_code = data.get('totp_code')
         
-        if not username or not password:
-            return jsonify({'error': 'Username and password required'}), 400
+        # Validate input
+        try:
+            if not username or not password:
+                return jsonify({'error': 'Username and password required'}), 400
             
+            username = validate_username(username)
+            validate_password(password)
+        except ValidationError as e:
+            audit_logger.log(username or 'unknown', 'login_attempt', 'authentication', 'failure', 
+                           {'reason': str(e)}, ip_address)
+            return jsonify({'error': str(e)}), 400
+        
         print(f"Login attempt for user: {username}")
         print(f"TOTP code provided: {totp_code is not None}")
         
@@ -137,8 +187,12 @@ def handle_login():
         print(f"Authentication result: {session_token}")
         
         if session_token == 'ACCOUNT_LOCKED':
+            audit_logger.log(username, 'login_attempt', 'authentication', 'failure',
+                           {'reason': 'account_locked'}, ip_address)
             return jsonify({'error': 'This account has been locked. Please contact an administrator.'}), 401
         elif session_token == 'NEEDS_2FA_SETUP':
+            audit_logger.log(username, 'login_attempt', 'authentication', 'needs_2fa_setup', 
+                           {'reason': '2fa_setup_required'}, ip_address)
             secret, provisioning_uri, qr_code = user_manager.setup_2fa(username)
             return jsonify({
                 'status': 'needs_2fa_setup',
@@ -148,18 +202,25 @@ def handle_login():
                 'qr_code': qr_code
             })
         elif session_token == 'NEEDS_2FA':
+            audit_logger.log(username, 'login_attempt', 'authentication', 'needs_2fa',
+                           {'reason': '2fa_required'}, ip_address)
             return jsonify({
                 'status': 'needs_2fa',
                 'username': username
             })
         elif session_token:
+            audit_logger.log(username, 'login', 'authentication', 'success', None, ip_address)
             return jsonify({
                 'token': session_token,
                 'username': username
             })
         else:
+            audit_logger.log(username, 'login_attempt', 'authentication', 'failure',
+                           {'reason': 'invalid_credentials'}, ip_address)
             return jsonify({'error': 'Invalid credentials'}), 401
     except Exception as e:
+        audit_logger.log('unknown', 'login_attempt', 'authentication', 'failure',
+                       {'reason': str(e)}, request.remote_addr)
         return jsonify({'error': f'Login failed: {str(e)}'}), 500
 
 @app.route('/api/logout', methods=['POST'])
@@ -172,6 +233,7 @@ def handle_logout():
     token = auth_header.split(' ')[1]
     
     if user_manager.logout(token):
+        audit_logger.log(username, 'logout', 'authentication', 'success', None, request.remote_addr)
         return jsonify({'message': 'Logged out successfully'})
     return jsonify({'error': 'Invalid session'}), 401
 
@@ -287,15 +349,18 @@ def handle_launch():
                 vdiUUID = vds_profile['vdsProperties']['uuid']
                 expectedCIDR = vds_profile['vdsProperties']['expected_cidr_range']
         except Exception as e:
+            audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': str(e)}, request.remote_addr)
             return jsonify({'error': f'Failed to load VDS profile: {str(e)}'}), 400
             
         # Dev mode - skip Broker execution
         if os.getenv('SKIP_BROKER') == '1':
+            audit_logger.log(username, 'vdi_launch', vdiFile, 'success', {'mode': 'dev_skip'}, request.remote_addr)
             return jsonify({'status': 'dev-skip', 'username': username, 'vdiFile': vdiFile})
 
         # Get VDS password from database
         vds_password = user_manager.get_vds_password(username)
         if not vds_password:
+            audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': 'no_vds_password'}, request.remote_addr)
             return jsonify({'error': 'Failed to retrieve VDS password'}), 500
 
         # Execute Broker.py
@@ -307,9 +372,11 @@ def handle_launch():
             
             if proc.returncode != 0:
                 error_msg = proc.stdout.strip() or proc.stderr.strip() or "Unknown error occurred"
+                audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': error_msg}, request.remote_addr)
                 return jsonify({'error': error_msg}), 500
                 
         except Exception as e:
+            audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': str(e)}, request.remote_addr)
             return jsonify({'error': f'Failed to execute broker: {str(e)}'}), 500
 
         # Parse JSON response from stdout
@@ -319,11 +386,14 @@ def handle_launch():
                     broker_response = json.loads(line)
                     break
             else:
+                audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': 'no_broker_response'}, request.remote_addr)
                 return jsonify({'error': 'No valid response from broker'}), 500
         except Exception as e:
+            audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': 'invalid_response'}, request.remote_addr)
             return jsonify({'error': 'Invalid response from broker'}), 500
 
         if 'connection_id' not in broker_response:
+            audit_logger.log(username, 'vdi_launch', vdiFile, 'failure', {'reason': 'no_connection_id'}, request.remote_addr)
             return jsonify({'error': 'No connection ID in broker response'}), 500
 
         # Create base64-encoded connection string for Guacamole
@@ -331,8 +401,11 @@ def handle_launch():
         bytes_to_encode = string_with_nulls.encode('utf-8')
         broker_response['connection_string'] = base64.b64encode(bytes_to_encode).decode('utf-8')
 
+        audit_logger.log(username, 'vdi_launch', vdiFile, 'success', 
+                        {'connection_id': broker_response['connection_id']}, request.remote_addr)
         return jsonify(broker_response)
     except Exception as e:
+        audit_logger.log('unknown', 'vdi_launch', 'unknown', 'failure', {'reason': str(e)}, request.remote_addr)
         return jsonify({'error': f'Launch failed: {str(e)}'}), 500
 
 @app.route('/api/setup-2fa', methods=['POST'])
@@ -391,26 +464,37 @@ def handle_users():
     try:
         if not validate_user_admin():
             return jsonify({'error': 'Unauthorized: User admin access required'}), 403
-            
+        
+        current_user = validate_session()
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
         admin_level = data.get('admin_level', 0)
         
         if not username or not password:
+            audit_logger.log(current_user, 'user_create', username, 'failure', 
+                           {'reason': 'missing_fields'}, request.remote_addr)
             return jsonify({'error': 'Username and password required'}), 400
         
         # Validate admin_level
         if admin_level not in [0, 1, 2, 3]:
+            audit_logger.log(current_user, 'user_create', username, 'failure',
+                           {'reason': 'invalid_admin_level'}, request.remote_addr)
             return jsonify({'error': 'Invalid admin level'}), 400
             
         success, message = user_manager.add_user(username, password, admin_level)
         if success:
+            audit_logger.log(current_user, 'user_create', username, 'success',
+                           {'admin_level': admin_level}, request.remote_addr)
             return jsonify({'message': message})
         else:
+            audit_logger.log(current_user, 'user_create', username, 'failure',
+                           {'reason': message}, request.remote_addr)
             return jsonify({'error': message}), 400
             
     except Exception as e:
+        audit_logger.log(validate_session() or 'unknown', 'user_create', 'unknown', 'failure',
+                       {'reason': str(e)}, request.remote_addr)
         return jsonify({'error': f'Failed to create user: {str(e)}'}), 500
 
 @app.route('/api/users/<username>/admin-level', methods=['PUT'])
@@ -422,25 +506,37 @@ def handle_set_admin_level(username):
         # Users can't modify their own admin level
         current_user = validate_session()
         if current_user == username and not validate_global_admin():
+            audit_logger.log(current_user, 'admin_level_change', username, 'failure',
+                           {'reason': 'cannot_modify_own_level'}, request.remote_addr)
             return jsonify({'error': 'Cannot modify your own admin level'}), 403
             
         data = request.get_json()
         admin_level = data.get('admin_level')
         
         if admin_level is None:
+            audit_logger.log(current_user, 'admin_level_change', username, 'failure',
+                           {'reason': 'missing_admin_level'}, request.remote_addr)
             return jsonify({'error': 'admin_level required'}), 400
         
         # Validate admin_level
         if admin_level not in [0, 1, 2, 3]:
+            audit_logger.log(current_user, 'admin_level_change', username, 'failure',
+                           {'reason': 'invalid_admin_level'}, request.remote_addr)
             return jsonify({'error': 'Invalid admin level (must be 0-3)'}), 400
             
         success, message = user_manager.set_admin_level(username, admin_level)
         if success:
+            audit_logger.log(current_user, 'admin_level_change', username, 'success',
+                           {'new_admin_level': admin_level}, request.remote_addr)
             return jsonify({'message': message})
         else:
+            audit_logger.log(current_user, 'admin_level_change', username, 'failure',
+                           {'reason': message}, request.remote_addr)
             return jsonify({'error': message}), 400
             
     except Exception as e:
+        audit_logger.log(validate_session() or 'unknown', 'admin_level_change', username, 'failure',
+                       {'reason': str(e)}, request.remote_addr)
         return jsonify({'error': f'Failed to update admin level: {str(e)}'}), 500
 
 @app.route('/api/users/<username>', methods=['DELETE'])
@@ -452,16 +548,23 @@ def handle_delete_user(username):
         # Users can't delete their own account
         current_user = validate_session()
         if current_user == username:
+            audit_logger.log(current_user, 'user_delete', username, 'failure',
+                           {'reason': 'cannot_delete_own_account'}, request.remote_addr)
             return jsonify({'error': 'Cannot delete your own account'}), 403
             
         # Delete the user
         success = user_manager.delete_user(username)
         if success:
+            audit_logger.log(current_user, 'user_delete', username, 'success', None, request.remote_addr)
             return jsonify({'message': f'User {username} deleted successfully'})
         else:
+            audit_logger.log(current_user, 'user_delete', username, 'failure',
+                           {'reason': 'user_not_found'}, request.remote_addr)
             return jsonify({'error': 'User not found or could not be deleted'}), 404
             
     except Exception as e:
+        audit_logger.log(validate_session() or 'unknown', 'user_delete', username, 'failure',
+                       {'reason': str(e)}, request.remote_addr)
         return jsonify({'error': f'Failed to delete user: {str(e)}'}), 500
 
 @app.route('/api/users/list', methods=['GET'])
@@ -556,6 +659,55 @@ def handle_active_vdis():
     except Exception as e:
         print(f"Error fetching active VDIs: {str(e)}")
         return jsonify({'error': f'Failed to fetch active VDIs: {str(e)}'}), 500
+
+@app.route('/api/audit-logs', methods=['GET'])
+def handle_get_audit_logs():
+    """Get audit logs - admins can see all, users can see their own"""
+    try:
+        username = validate_session()
+        if not username:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        is_admin = user_manager.is_admin(username)
+        limit = request.args.get('limit', default=100, type=int)
+        offset = request.args.get('offset', default=0, type=int)
+        
+        # Limit to reasonable values
+        limit = min(limit, 500)
+        
+        if is_admin:
+            # Admins can filter by username and action
+            filter_username = request.args.get('username')
+            filter_action = request.args.get('action')
+            logs = audit_logger.get_logs(username=filter_username, action=filter_action, 
+                                        limit=limit, offset=offset)
+        else:
+            # Regular users can only see their own logs
+            logs = audit_logger.get_logs(username=username, limit=limit, offset=offset)
+        
+        return jsonify({'logs': logs, 'count': len(logs)})
+    
+    except Exception as e:
+        return jsonify({'error': f'Failed to retrieve audit logs: {str(e)}'}), 500
+
+@app.route('/api/user-activity/<username>', methods=['GET'])
+def handle_user_activity_summary(username):
+    """Get activity summary for a user - admins only"""
+    try:
+        current_user = validate_session()
+        if not current_user:
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        if not validate_user_admin():
+            return jsonify({'error': 'Unauthorized: User admin access required'}), 403
+        
+        days = request.args.get('days', default=30, type=int)
+        summary = audit_logger.get_user_activity_summary(username, days)
+        
+        return jsonify({'username': username, 'days': days, 'summary': summary})
+    
+    except Exception as e:
+        return jsonify({'error': f'Failed to get activity summary: {str(e)}'}), 500
 
 @app.route('/api/vdi-profiles', methods=['GET'])
 def handle_list_vdi_profiles():

@@ -715,4 +715,74 @@ body{
   color: var(--muted);
 }
 
+/* Language Selector Styles */
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.language-selector label {
+  font-weight: 500;
+  color: #e6eef6;
+  margin: 0;
+  min-width: 100px;
+}
+
+.language-selector select {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: #e6eef6;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-selector select:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.language-selector select:focus {
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3);
+}
+
+.language-selector select option {
+  background: #1f2937;
+  color: #e6eef6;
+  padding: 8px 12px;
+}
+
+.profile-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.profile-section h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.2em;
+  color: #e6eef6;
+}
+
+.profile-section p {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 0.95em;
+}
 
